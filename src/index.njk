@@ -1,0 +1,47 @@
+---
+layout: layout.njk
+title: Church | Elimbath.org | Bath
+nav: home
+permalink: /
+---
+{% set h = home %}
+<section class="welcome" style="background-image:url('{{ h.welcome.image }}')">
+  <div class="wrap">
+    <div class="card">
+      <h1>{{ h.welcome.title }}</h1>
+      {{ h.welcome.text | md | safe }}
+    </div>
+  </div>
+</section>
+
+<section class="livestream" style="background-image:url('{{ h.livestream.background }}')">
+  <div class="inner">
+    <h2>{{ h.livestream.heading_small }} <big>{{ h.livestream.heading_big }}</big></h2>
+    <p>{{ h.livestream.text }}</p>
+    {% if h.livestream.button_url %}<a class="btn" href="{{ h.livestream.button_url }}" target="_blank" rel="noopener">{{ h.livestream.button_label }}</a>{% endif %}
+  </div>
+</section>
+
+{% for n in h.notices %}{% if n.show %}
+<section class="notice" style="{% if n.background_color %}background-color:{{ n.background_color }};{% endif %}{% if n.background_image %}background-image:url('{{ n.background_image }}');{% endif %}">
+  {% if n.link %}<a href="{{ n.link }}">{% endif %}<img src="{{ n.image }}" alt="{{ n.alt }}">{% if n.link %}</a>{% endif %}
+</section>
+{% endif %}{% endfor %}
+
+<section style="background:#fff">
+  <div class="info-grid">
+    <div class="photo"><img src="{{ h.im_new.image }}" alt=""></div>
+    <div class="text">
+      <h2>{{ h.im_new.title }}</h2>
+      {{ h.im_new.text | md | safe }}
+    </div>
+    <div class="text">
+      <h2>{{ h.sunday.title }}</h2>
+      {{ h.sunday.text | md | safe }}
+      <a class="yt" href="{{ h.sunday.youtube_url }}" target="_blank" rel="noopener"><img src="/images/32195a_e44a3404ac8e4b448e8cd8bbcb619746.png" alt="Watch on YouTube"></a>
+    </div>
+    <div class="photo second"><img src="{{ h.sunday.image }}" alt=""></div>
+  </div>
+  <iframe class="map" title="Map: {{ h.map_query }}" loading="lazy"
+    src="https://www.google.com/maps?q={{ h.map_query | urlencode }}&z=16&output=embed"></iframe>
+</section>

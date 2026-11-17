@@ -1,0 +1,312 @@
+# Decap CMS configuration — https://decapcms.org/docs/configuration-options/
+backend:
+  name: github
+  repo: YOUR-GITHUB-USER/bath-elim-website   # ← change to the real GitHub repository
+  branch: main
+  auth_endpoint: api/auth
+  commit_messages:
+    update: "Update {{collection}} “{{slug}}”"
+
+# When running locally (`npm run cms` + `npm run dev`) edits go straight to files on disk.
+local_backend: true
+
+site_url: https://www.elimbath.org
+display_url: https://www.elimbath.org
+logo_url: /images/logo-header.png
+locale: en
+
+media_folder: src/images
+public_folder: /images
+
+# Reusable field shapes
+_md: &md { widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, bulleted-list, numbered-list], editor_components: [], modes: [rich_text, raw] }
+_link_hint: &link_hint "A page on this site like /give, or a full web address like https://…"
+
+collections:
+  - name: pages
+    label: Pages
+    description: The text and pictures on each page of the website. Changes go live about a minute after you click Publish.
+    files:
+
+      - name: home
+        label: Home
+        file: src/_data/home.yml
+        fields:
+          - label: Welcome box
+            name: welcome
+            widget: object
+            fields:
+              - { label: Heading, name: title, widget: string }
+              - { label: Background photo, name: image, widget: image }
+              - { label: Text, name: text, <<: *md }
+          - label: Live stream
+            name: livestream
+            widget: object
+            hint: Update the button each week with the date and the YouTube link for Sunday's service.
+            fields:
+              - { label: Small heading, name: heading_small, widget: string }
+              - { label: Big heading, name: heading_big, widget: string }
+              - { label: Text, name: text, widget: text }
+              - { label: Button label, name: button_label, widget: string, hint: "e.g. Watch 15/11/2026" }
+              - { label: Button link (YouTube), name: button_url, widget: string }
+              - { label: Background photo, name: background, widget: image }
+          - label: Notices & event posters
+            name: notices
+            widget: list
+            summary: "{{fields.alt}}"
+            hint: Banners shown under the live stream. Untick "Show" to hide one without deleting it.
+            fields:
+              - { label: Show on the website, name: show, widget: boolean, default: true }
+              - { label: Image, name: image, widget: image }
+              - { label: Description (for screen readers), name: alt, widget: string }
+              - { label: Link, name: link, widget: string, required: false }
+              - { label: Background colour, name: background_color, widget: string, required: false, hint: "e.g. #142940" }
+              - { label: Background picture, name: background_image, widget: image, required: false }
+          - label: "I'm New"
+            name: im_new
+            widget: object
+            fields:
+              - { label: Heading, name: title, widget: string }
+              - { label: Photo, name: image, widget: image }
+              - { label: Text, name: text, <<: *md }
+          - label: Sunday services
+            name: sunday
+            widget: object
+            fields:
+              - { label: Heading, name: title, widget: string }
+              - { label: Photo, name: image, widget: image }
+              - { label: Text, name: text, <<: *md }
+              - { label: YouTube channel link, name: youtube_url, widget: string }
+          - { label: Map location, name: map_query, widget: string, hint: "Address shown on the Google map" }
+
+      - name: believe
+        label: What we believe
+        file: src/_data/believe.yml
+        fields:
+          - { label: Introduction, name: intro, widget: text }
+          - label: Beliefs
+            name: beliefs
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Icon, name: icon, widget: image }
+              - { label: Title, name: title, widget: string }
+              - { label: Text, name: text, widget: text }
+
+      - name: team
+        label: Leadership team
+        file: src/_data/team.yml
+        fields:
+          - { label: Introduction heading, name: intro_title, widget: string }
+          - { label: Introduction, name: intro, <<: *md }
+          - label: Pastor
+            name: pastor
+            widget: object
+            fields: &person
+              - { label: Photo, name: photo, widget: image }
+              - { label: Name, name: name, widget: string }
+              - { label: Role, name: role, widget: string, required: false }
+          - { label: Elders, name: elders, widget: list, summary: "{{fields.name}}", fields: *person }
+          - { label: Team (deacons), name: team, widget: list, summary: "{{fields.name}}", fields: *person }
+
+      - name: history
+        label: History of Bath Elim
+        file: src/_data/history.yml
+        fields:
+          - { label: Page title, name: title, widget: string }
+          - { label: Top photo, name: hero, widget: image }
+          - label: Timeline
+            name: timeline
+            widget: list
+            summary: "{{fields.year}} — {{fields.title}}"
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Year, name: year, widget: string }
+              - { label: Photo, name: image, widget: image }
+              - { label: Text, name: text, <<: *md }
+              - { label: Button label, name: button_label, widget: string, required: false }
+              - { label: Button link, name: button_url, widget: string, required: false }
+          - { label: Closing text, name: closing, <<: *md }
+
+      - name: building
+        label: More on our building
+        file: src/_data/building.yml
+        fields:
+          - { label: Page title, name: title, widget: string }
+          - { label: Top photo, name: hero, widget: image }
+          - label: Questions
+            name: questions
+            widget: list
+            summary: "{{fields.question}}"
+            fields:
+              - { label: Question, name: question, widget: string }
+              - { label: Answer, name: answer, <<: *md }
+
+      - name: kids
+        label: Lighthouse Kids
+        file: src/_data/kids.yml
+        fields: &ministry
+          - { label: Page title, name: title, widget: string }
+          - { label: Top photo, name: hero, widget: image }
+          - label: Quote
+            name: quote
+            widget: object
+            fields:
+              - { label: Photo, name: photo, widget: image }
+              - { label: Quote, name: text, widget: text }
+              - { label: Said by, name: author, widget: string }
+          - label: Sections
+            name: sections
+            widget: list
+            summary: "{{fields.heading}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false }
+              - { label: Text, name: text, <<: *md }
+          - { label: Photo strip, name: photos, widget: list, required: false, fields: [ { label: Photo, name: image, widget: image } ] }
+
+      - name: toddlers
+        label: Little Friends Toddler Group
+        file: src/_data/toddlers.yml
+        fields:
+          - { label: Page title, name: title, widget: string }
+          - { label: Top photo, name: hero, widget: image }
+          - label: Quote
+            name: quote
+            widget: object
+            fields:
+              - { label: Photo, name: photo, widget: image }
+              - { label: Quote, name: text, widget: text }
+              - { label: Said by, name: author, widget: string }
+          - { label: Text, name: text, <<: *md }
+          - { label: Photo strip, name: photos, widget: list, fields: [ { label: Photo, name: image, widget: image } ] }
+
+      - name: ladies
+        label: Precious Ladies
+        file: src/_data/ladies.yml
+        fields:
+          - { label: Page title, name: title, widget: string }
+          - { label: Top photo, name: hero, widget: image }
+          - { label: Opening statement, name: lead, widget: text }
+          - { label: Sub-heading, name: ways_heading, widget: string }
+          - label: Ways (numbered boxes)
+            name: ways
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Text, name: text, widget: text }
+
+      - name: shoebox
+        label: Shoebox Appeal
+        file: src/_data/shoebox.yml
+        fields:
+          - { label: Picture, name: image, widget: image }
+          - { label: Text, name: text, <<: *md }
+
+      - name: hire
+        label: Building hire
+        file: src/_data/hire.yml
+        fields:
+          - { label: Heading, name: title, widget: string }
+          - { label: Introduction, name: intro, <<: *md }
+          - label: Rooms
+            name: rooms
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { label: Room name, name: name, widget: string }
+              - { label: Photos (slideshow), name: photos, widget: list, fields: [ { label: Photo, name: image, widget: image } ] }
+              - { label: Description, name: text, <<: *md }
+          - { label: Logos heading, name: logos_title, widget: string }
+          - { label: Logos of past hirers, name: logos, widget: list, fields: [ { label: Logo, name: image, widget: image } ] }
+
+      - name: terms
+        label: Terms of building hire
+        file: src/_data/terms.yml
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Terms, name: body, <<: *md }
+
+      - name: give
+        label: Give
+        file: src/_data/give.yml
+        fields:
+          - { label: Page title, name: title, widget: string }
+          - { label: Top picture, name: hero, widget: image }
+          - { label: Why do we give?, name: why, <<: *md }
+          - { label: Regular giving (bank details), name: regular, <<: *md }
+          - { label: Regular giving pictures, name: regular_images, widget: list, fields: [ { label: Picture, name: image, widget: image } ] }
+          - { label: Givt app text, name: givt, <<: *md }
+          - { label: Givt logo, name: givt_logo, widget: image }
+          - { label: Givt QR code picture, name: givt_qr, widget: image }
+          - { label: Givt link, name: givt_url, widget: string }
+          - { label: Gift Aid, name: gift_aid, <<: *md }
+
+      - name: watch
+        label: Watch again
+        file: src/_data/watch.yml
+        fields:
+          - { label: Page title, name: title, widget: string }
+          - label: Videos
+            name: videos
+            widget: list
+            summary: "{{fields.title}}"
+            hint: New videos go at the top — drag to reorder.
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Thumbnail picture, name: thumbnail, widget: image }
+              - { label: YouTube link, name: url, widget: string }
+
+  - name: custom_pages
+    label: New pages
+    label_singular: page
+    description: Extra pages you create yourself. After creating one, add it to the menu under Site settings → Menu.
+    folder: src/pages
+    extension: md
+    format: frontmatter
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}}  —  /{{slug}}"
+    fields:
+      - { label: Page title, name: title, widget: string, hint: "The page address is made from the title when you first save it, e.g. 'Youth Group' → /youth-group" }
+      - { label: Top photo, name: hero, widget: image, required: false, hint: Shows the title in big letters over the photo. }
+      - { label: Introduction, name: intro, widget: text, required: false }
+      - { label: Page content, name: body, widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list], editor_components: [image], modes: [rich_text, raw] }
+
+  - name: settings
+    label: Site settings
+    files:
+      - name: menu
+        label: Menu
+        file: src/_data/menu.yml
+        fields:
+          - label: Menu items
+            name: items
+            widget: list
+            summary: "{{fields.label}}"
+            hint: Drag to reorder. An item with sub-items becomes a drop-down.
+            fields:
+              - { label: Label, name: label, widget: string }
+              - { label: Link, name: url, widget: string, required: false, hint: "Leave empty for a drop-down heading. Otherwise a page like /give or a full web address." }
+              - label: Sub-items (drop-down)
+                name: children
+                widget: list
+                required: false
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: url, widget: string, hint: *link_hint }
+      - name: settings
+        label: Footer & contact details
+        file: src/_data/settings.yml
+        fields:
+          - { label: Church name, name: site_name, widget: string }
+          - { label: Address line, name: address, widget: string }
+          - { label: Charity line, name: charity, widget: string }
+          - { label: Facebook link, name: facebook, widget: string }
+          - { label: YouTube link, name: youtube, widget: string }
+          - { label: Safeguarding policy (PDF), name: safeguarding_policy, widget: file, media_folder: /src/files, public_folder: /files }
+          - { label: Safeguarding commitment link, name: safeguarding_link, widget: string }
+          - { label: Default page description (for Google), name: description, widget: text }

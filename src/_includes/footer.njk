@@ -1,0 +1,28 @@
+<footer class="site-footer">
+  <div class="top">
+    <a class="flogo" href="/"><img src="/images/logo-footer.png" alt="Bath Elim Church — For the journey"></a>
+    <form class="contact-form" data-form="contact" action="/api/contact" method="post">
+      <input type="text" name="name" placeholder="Name" aria-label="Name" required>
+      <input type="email" name="email" placeholder="Email" aria-label="Email" required>
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <textarea name="message" placeholder="Message" aria-label="Message" required></textarea>
+      <p class="form-status" role="status"></p>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  <div class="bottom">
+    <a class="elim" href="https://www.elim.org.uk" target="_blank" rel="noopener"><img src="/images/32195a_7ca557d56acc46f18912e437d1418635.png" alt="Elim"></a>
+    <div class="addr">
+      {{ settings.address }}<br>
+      {{ settings.charity }}
+    </div>
+    <div class="side">
+      <div class="social">
+        <a href="{{ settings.facebook }}" target="_blank" rel="noopener"><img src="/images/e316f544f9094143b9eac01f1f19e697.png" alt="Facebook"></a>
+        <a href="{{ settings.youtube }}" target="_blank" rel="noopener"><img src="/images/a1b09fe8b7f04378a9fe076748ad4a6a.png" alt="YouTube"></a>
+      </div>
+      <a class="pill" href="{{ settings.safeguarding_policy }}" target="_blank">Safeguarding Policy</a>
+      <a class="pill" href="{{ settings.safeguarding_link }}" target="_blank" rel="noopener">Our commitment to safeguarding</a>
+    </div>
+  </div>
+</footer>

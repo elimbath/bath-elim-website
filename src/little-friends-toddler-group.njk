@@ -1,0 +1,19 @@
+---
+layout: layout.njk
+title: LITTLE FRIENDS TODDLER GROUP
+nav: church-life
+permalink: /little-friends-toddler-group/
+---
+<section class="hero" style="background-image:url('{{ toddlers.hero }}')">
+  <h1>{{ toddlers.title }}</h1>
+</section>
+<section class="content-band" style="padding-bottom:0">
+  <div class="container">
+    <div class="quote">
+      <img src="{{ toddlers.quote.photo }}" alt="{{ toddlers.quote.author }}">
+      <h2 class="caps">{{ toddlers.quote.text }}<br><br>{{ toddlers.quote.author }}</h2>
+    </div>
+    <div class="lf-text">{{ toddlers.text | md | safe }}</div>
+  </div>
+  <div class="photo-row">{% for p in toddlers.photos %}<img src="{{ p.image }}" alt="Little Friends toddler group" loading="lazy">{% endfor %}</div>
+</section>

@@ -1,0 +1,25 @@
+---
+layout: layout.njk
+title: HISTORY OF BATH ELIM
+nav: about
+permalink: /history-of-bath-elim/
+---
+<section class="hero" style="background-image:url('{{ history.hero }}')">
+  <h1>{{ history.title }}</h1>
+</section>
+<div class="history-wrap">
+{% for t in history.timeline %}
+<div class="timeline-row">
+  <div class="left" style="background-image:url('{{ t.image }}')">
+    <h2>{{ t.title }}</h2><div class="year">{{ t.year }}</div>
+  </div>
+  <div class="right">
+    {{ t.text | md | safe }}
+    {% if t.button_url %}<a class="btn" href="{{ t.button_url }}">{{ t.button_label }}</a>{% endif %}
+  </div>
+</div>
+{% endfor %}
+</div>
+<section class="closing" style="background-image:url('{{ history.hero }}')">
+  {{ history.closing | md | safe }}
+</section>

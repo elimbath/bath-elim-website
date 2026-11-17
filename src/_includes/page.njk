@@ -1,0 +1,16 @@
+---
+layout: layout.njk
+---
+{# Layout for pages created in the CMS (src/pages/*.md) #}
+{% if hero %}
+<section class="hero" style="background-image:url('{{ hero }}')">
+  <h1>{{ title }}</h1>
+</section>
+{% endif %}
+<section class="content-band custom-page">
+  <div class="container">
+    {% if not hero %}<h1 class="custom-title">{{ title }}</h1>{% endif %}
+    {% if intro %}<p class="custom-intro">{{ intro }}</p>{% endif %}
+    <div class="prose">{{ content | safe }}</div>
+  </div>
+</section>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.url == "/" %}{{ title }}{% else %}{{ title }} | {{ settings.site_name }}{% endif %}</title>
+<meta name="description" content="{{ description or settings.description }}">
+<link rel="icon" href="/images/32195a_00ed52c2f2e845919acfd4d935e241a3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=K2D:wght@400&family=Lato:wght@300;400;700&family=Montserrat:wght@800&family=Nunito+Sans:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+{% include "header.njk" %}
+<main id="main">
+{{ content | safe }}
+</main>
+{% include "footer.njk" %}
+<script src="/js/main.js" defer></script>
+</body>
+</html>

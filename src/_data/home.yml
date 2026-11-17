@@ -1,0 +1,49 @@
+welcome:
+  title: Welcome
+  image: /images/32195a_644574676b884324aa4a54554f28b9ab.jpg
+  text: >-
+    We’re a friendly, welcoming community that has been part of the heart of
+    Bath for nearly 100 years. Our church includes people of all ages and
+    backgrounds, and there’s a place for you here, no matter where you’re coming
+    from.
+
+
+    We believe in a message of hope and transformation: that Jesus Christ, who lived over 2,000 years ago, brings new life and purpose to people today. Whether you’re curious about faith, exploring life’s big questions, or just looking for a supportive community, we’re here for you.
+
+
+    Bath Elim is part of the Elim Pentecostal family, and we’d love for you to join us at one of our gatherings soon. Wherever you are on your journey, you’re welcome here.
+livestream:
+  heading_small: this week's
+  heading_big: live stream
+  text: Every Sunday our 10.30am service is live-streamed on YouTube so you can
+    watch from home, catch up in the week and share the moment with friends and
+    family wherever you are.
+  button_label: Watch 15/11/2026
+  button_url: https://www.youtube.com/watch?v=Ub_iPMHfl8M
+  background: /images/32195a_33fbcb20d747459798f893871c559372.jpg
+notices:
+  - image: /images/32195a_3f0685a0f0604aa6acc0a2891fd104a3.jpg
+    alt: "On Earth as it is in Heaven — Bath inter church event: 24 hour prayer"
+    link: ""
+    background_color: "#142940"
+    background_image: ""
+    show: true
+  - image: /images/32195a_ab3afb9023424bf8a90e2035602246b0.jpg
+    alt: Event poster
+    link: ""
+    background_color: ""
+    background_image: /images/11062b_54c7427ad6df46208b0658d6f9e906d4.jpeg
+    show: true
+im_new:
+  title: I'm New
+  image: /images/32195a_b232bcef3579425eb44dc5528bf142ce.jpg
+  text: First and foremost, you are so welcome.  There are a number of ways to get
+    connected and find community through serving on a team or joining a life
+    group.
+sunday:
+  title: Sunday services
+  image: /images/32195a_eab2c79463974ad8ac6e3277dcbab3e8.jpg
+  text: We gather weekly at 10:30am in our city centre building.  It would be
+    great to see you in person or online
+  youtube_url: https://www.youtube.com/@elimbath4131
+map_query: Bath Elim Church, Charlotte Street, Bath BA1 2ND

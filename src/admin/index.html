@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Bath Elim Church — Content Manager</title>
+  <link rel="icon" href="/images/32195a_00ed52c2f2e845919acfd4d935e241a3.png">
+  <script>window.CMS_MANUAL_INIT = true;</script>
+</head>
+<body>
+  <script src="https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js"></script>
+  <script src="/admin/vendor/nunjucks.min.js"></script>
+  <script src="/admin/vendor/markdown-it.min.js"></script>
+  <script>
+    // Make the preview pane look like the real site
+    CMS.registerPreviewStyle("https://fonts.googleapis.com/css2?family=K2D:wght@400&family=Lato:wght@300;400;700&family=Montserrat:wght@800&family=Nunito+Sans:wght@800&display=swap");
+    CMS.registerPreviewStyle("/css/style.css");
+    CMS.registerPreviewStyle(".slider img:first-child{opacity:1}.hero,.livestream,.closing{background-attachment:scroll}.site-header{position:relative}", { raw: true });
+  </script>
+  <script src="/admin/preview.js"></script>
+</body>
+</html>

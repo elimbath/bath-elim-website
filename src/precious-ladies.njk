@@ -1,0 +1,20 @@
+---
+layout: layout.njk
+title: PRECIOUS LADIES
+nav: church-life
+permalink: /precious-ladies/
+---
+<section class="hero" style="background-image:url('{{ ladies.hero }}')">
+  <h1>{{ ladies.title }}</h1>
+</section>
+<section class="content-band">
+  <div class="container">
+    <h2 class="pl-lead">{{ ladies.lead }}</h2>
+    <div class="three-ways"><h2>{{ ladies.ways_heading }}</h2></div>
+    <div class="ways">
+      {% for w in ladies.ways %}
+      <div class="way"><div class="num">{{ loop.index }}</div><h3>{{ w.title }}</h3>{{ w.text | md | safe }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

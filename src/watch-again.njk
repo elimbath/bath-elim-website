@@ -1,0 +1,16 @@
+---
+layout: layout.njk
+title: WATCH AGAIN
+nav: watch-again
+permalink: /watch-again/
+---
+<section class="container">
+  <div class="watch-head">
+    <h1>{{ watch.title }}</h1>
+    <a href="{{ settings.youtube }}" target="_blank" rel="noopener"><img src="/images/32195a_e44a3404ac8e4b448e8cd8bbcb619746.png" alt="YouTube channel"></a>
+  </div>
+  <div class="video-grid">
+    {% for v in watch.videos %}<a href="{{ v.url }}" target="_blank" rel="noopener" title="{{ v.title }}"><img src="{{ v.thumbnail }}" alt="{{ v.title }}" loading="lazy"></a>
+    {% endfor %}
+  </div>
+</section>

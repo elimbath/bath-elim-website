@@ -1,0 +1,22 @@
+<header class="site-header">
+  <div class="bar">
+    <a class="logo" href="/" aria-label="{{ settings.site_name }} home"><img src="/images/logo-header.png" alt="{{ settings.site_name }} — For the journey" width="201" height="65"></a>
+    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {%- for item in menu.items %}
+        <li{% if item | menuActive(page.url, nav) %} class="active"{% endif %}>
+          {%- if item.children and item.children.length %}
+          {%- if item.url %}<a href="{{ item.url }}" aria-haspopup="true">{{ item.label }}</a>{% else %}<button type="button" aria-haspopup="true">{{ item.label }}</button>{% endif %}
+          <ul class="sub">
+            {%- for c in item.children %}
+            <li><a href="{{ c.url }}"{% if c.url.startsWith("http") %} target="_blank" rel="noopener"{% endif %}>{{ c.label }}</a></li>
+            {%- endfor %}
+          </ul>
+          {%- else %}<a href="{{ item.url }}"{% if item.url.startsWith("http") %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>{% endif %}
+        </li>
+        {%- endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>

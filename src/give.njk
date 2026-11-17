@@ -1,0 +1,35 @@
+---
+layout: layout.njk
+title: GIVE
+nav: give
+permalink: /give/
+---
+<section class="hero" style="background-image:url('{{ give.hero }}')">
+  <h1 style="color:var(--ink);text-shadow:none">{{ give.title }}</h1>
+</section>
+<section class="give-band">
+  <div class="container">
+    <h6>why do we give?</h6>
+    <div class="why">{{ give.why | md | safe }}</div>
+    <h6>How to give</h6>
+    <div class="give-grid">
+      <div class="give-card">
+        <h4>regular giving</h4>
+        {{ give.regular | md | safe }}
+      </div>
+      <div class="qr-pair">
+        {% for i in give.regular_images %}<img{% if not loop.first %} class="small"{% endif %} src="{{ i.image }}" alt="">{% endfor %}
+      </div>
+    </div>
+    <div class="give-grid givt" style="margin-top:50px">
+      <div class="give-card">
+        <h4>givt app</h4>
+        {{ give.givt | md | safe }}
+        {% if give.givt_logo %}<img class="logo" src="{{ give.givt_logo }}" alt="Givt">{% endif %}
+      </div>
+      <a href="{{ give.givt_url }}" target="_blank" rel="noopener"><img src="{{ give.givt_qr }}" alt="Give with Givt — scan the QR code"></a>
+    </div>
+    <h6 style="margin-top:50px">UK taxpayers &amp; Gift Aid</h6>
+    <div class="giftaid">{{ give.gift_aid | md | safe }}</div>
+  </div>
+</section>

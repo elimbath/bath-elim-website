@@ -1,0 +1,21 @@
+---
+layout: layout.njk
+title: LEADERSHIP TEAM
+nav: about
+permalink: /meet-the-team/
+---
+{% macro person(p, cls) %}<div class="person {{ cls }}"><img src="{{ p.photo }}" alt="{{ p.name }}"><p class="name">{{ p.name }}</p><p class="role">{{ p.role or "&nbsp;" | safe }}</p></div>{% endmacro %}
+<section class="lead-intro container">
+  <p class="big">{{ team.intro_title }}</p>
+  {{ team.intro | md | safe }}
+</section>
+<section class="team-band" style="margin-top:30px">
+  <div class="container">
+    <div class="team-pastor">
+      <img src="{{ team.pastor.photo }}" alt="{{ team.pastor.name }}">
+      <div class="label">{{ team.pastor.name }}<br>{{ team.pastor.role }}</div>
+    </div>
+    <div class="team-grid">{% for p in team.elders %}{{ person(p, "") }}{% endfor %}</div>
+    <div class="team-grid" style="margin-top:60px">{% for p in team.team %}{{ person(p, "tall") }}{% endfor %}</div>
+  </div>
+</section>

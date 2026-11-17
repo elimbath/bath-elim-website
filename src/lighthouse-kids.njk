@@ -1,0 +1,24 @@
+---
+layout: layout.njk
+title: LIGHTHOUSE KIDS
+nav: church-life
+permalink: /lighthouse-kids/
+---
+<section class="hero" style="background-image:url('{{ kids.hero }}')">
+  <h1>{{ kids.title }}</h1>
+</section>
+<section class="content-band"{% if kids.photos.length %} style="padding-bottom:0"{% endif %}>
+  <div class="container">
+    <div class="quote">
+      <img src="{{ kids.quote.photo }}" alt="{{ kids.quote.author }}">
+      <h2>{{ kids.quote.text }}<br><br>{{ kids.quote.author }}</h2>
+    </div>
+    {% for s in kids.sections %}
+    <div class="block-center">
+      {% if s.heading %}<h2 class="display">{{ s.heading }}</h2>{% endif %}
+      {{ s.text | md | safe }}
+    </div>
+    {% endfor %}
+  </div>
+  {% if kids.photos.length %}<div class="photo-row">{% for p in kids.photos %}<img src="{{ p.image }}" alt="" loading="lazy">{% endfor %}</div>{% endif %}
+</section>

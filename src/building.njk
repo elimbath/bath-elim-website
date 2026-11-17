@@ -1,0 +1,14 @@
+---
+layout: layout.njk
+title: MORE ON OUR BUILDING
+nav: about
+permalink: /building/
+---
+<section class="hero" style="background-image:url('{{ building.hero }}')">
+  <h1>{{ building.title }}</h1>
+</section>
+<section class="qa-band">
+  {% for q in building.questions %}
+  <div class="qa"><h3>{{ q.question }}</h3>{{ q.answer | md | safe }}</div>
+  {% endfor %}
+</section>

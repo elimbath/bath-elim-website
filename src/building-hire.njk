@@ -1,0 +1,74 @@
+---
+layout: layout.njk
+title: BUILDING HIRE
+nav: building-hire
+permalink: /building-hire/
+---
+<section class="hire container" style="padding-top:20px;padding-bottom:20px">
+  <h1>{{ hire.title }}</h1>
+  <div class="lead">{{ hire.intro | md | safe }}</div>
+  {% for r in hire.rooms %}
+  <div class="room{% if loop.index0 % 2 == 1 %} flip{% endif %}">
+    <h2>{{ r.name }}</h2>
+    <div class="row">
+      <div class="slider">
+        {% for p in r.photos %}<img src="{{ p.image }}" alt="{{ r.name }}"{% if not loop.first %} loading="lazy"{% endif %}>{% endfor %}
+        {% if r.photos.length > 1 %}<button class="prev" aria-label="Previous photo">‹</button><button class="next" aria-label="Next photo">›</button>{% endif %}
+      </div>
+      <div class="desc">{{ r.text | md | safe }}</div>
+    </div>
+  </div>
+  {% endfor %}
+  <div class="enquire"><a class="btn btn-dark" href="#enquiry">Enquire Now</a></div>
+  <p class="logos-title">{{ hire.logos_title }}</p>
+  <div class="logos">
+    {% for l in hire.logos %}<img src="{{ l.image }}" alt="" loading="lazy">{% endfor %}
+  </div>
+</section>
+
+<section class="hire-form-wrap" id="enquiry">
+  <form class="hire-form" data-form="hire" action="/api/hire" method="post">
+    <h2>Venue Hire Enquiry Form</h2>
+    <div class="grid">
+      <div>
+        <label for="hf-name">Full Name</label><input id="hf-name" type="text" name="name">
+      </div>
+      <div class="full-row" style="grid-row: span 2">
+        <label for="hf-purpose">In a few words, describe the purpose of your hire</label>
+        <textarea id="hf-purpose" name="purpose" placeholder="Add answer here"></textarea>
+        <label for="hf-guests" style="margin-top:16px">Rough number of guests attending</label>
+        <select id="hf-guests" name="guests"><option value="">Choose an option</option><option>up to 30</option><option>31-60</option><option>61-90</option><option>91-130</option></select>
+      </div>
+      <div>
+        <label for="hf-org">Name of Organisation (if appropriate)</label><input id="hf-org" type="text" name="organisation">
+      </div>
+      <div>
+        <label for="hf-email">Email</label><input id="hf-email" type="email" name="email" required>
+      </div>
+      <fieldset>
+        <legend>Additional Requirements</legend>
+        <label class="check"><input type="checkbox" name="extras" value="PA system"> PA system (our staff will operate)</label>
+        <label class="check"><input type="checkbox" name="extras" value="Auditorium Kitchen"> Auditorium Kitchen (NB not Commercial Kitchen)</label>
+        <label class="check"><input type="checkbox" name="extras" value="Other"> Other</label>
+      </fieldset>
+      <fieldset>
+        <legend>Room(s) Required *</legend>
+        <label class="check"><input type="checkbox" name="rooms" value="Main Auditorium"> Main Auditorium</label>
+        <label class="check"><input type="checkbox" name="rooms" value="Cleveland Room"> Cleveland Room</label>
+        <label class="check"><input type="checkbox" name="rooms" value="Dolemeads Room"> Dolemeads Room</label>
+        <label class="check"><input type="checkbox" name="rooms" value="Commercial Kitchen"> Commercial Kitchen</label>
+      </fieldset>
+      <p class="note full">Period of Hire (Hire is charged in whole hour blocks, please allow adequate time for set up and clear down).</p>
+      <div class="times full">
+        <div><label for="hf-date">Date of Hire *</label><input id="hf-date" type="date" name="date" required></div>
+        <div><label for="hf-start">Start time</label><select id="hf-start" name="start"><option>12:00 AM</option><option>12:15 AM</option><option>12:30 AM</option><option>12:45 AM</option><option>01:00 AM</option><option>01:15 AM</option><option>01:30 AM</option><option>01:45 AM</option><option>02:00 AM</option><option>02:15 AM</option><option>02:30 AM</option><option>02:45 AM</option><option>03:00 AM</option><option>03:15 AM</option><option>03:30 AM</option><option>03:45 AM</option><option>04:00 AM</option><option>04:15 AM</option><option>04:30 AM</option><option>04:45 AM</option><option>05:00 AM</option><option>05:15 AM</option><option>05:30 AM</option><option>05:45 AM</option><option>06:00 AM</option><option>06:15 AM</option><option>06:30 AM</option><option>06:45 AM</option><option>07:00 AM</option><option>07:15 AM</option><option>07:30 AM</option><option>07:45 AM</option><option>08:00 AM</option><option>08:15 AM</option><option>08:30 AM</option><option>08:45 AM</option><option>09:00 AM</option><option>09:15 AM</option><option>09:30 AM</option><option>09:45 AM</option><option>10:00 AM</option><option>10:15 AM</option><option>10:30 AM</option><option>10:45 AM</option><option>11:00 AM</option><option>11:15 AM</option><option>11:30 AM</option><option>11:45 AM</option><option>12:00 PM</option><option>12:15 PM</option><option>12:30 PM</option><option>12:45 PM</option><option>01:00 PM</option><option>01:15 PM</option><option>01:30 PM</option><option>01:45 PM</option><option>02:00 PM</option><option>02:15 PM</option><option>02:30 PM</option><option>02:45 PM</option><option>03:00 PM</option><option>03:15 PM</option><option>03:30 PM</option><option>03:45 PM</option><option>04:00 PM</option><option>04:15 PM</option><option>04:30 PM</option><option>04:45 PM</option><option>05:00 PM</option><option>05:15 PM</option><option>05:30 PM</option><option>05:45 PM</option><option>06:00 PM</option><option>06:15 PM</option><option>06:30 PM</option><option>06:45 PM</option><option>07:00 PM</option><option>07:15 PM</option><option>07:30 PM</option><option>07:45 PM</option><option>08:00 PM</option><option>08:15 PM</option><option>08:30 PM</option><option>08:45 PM</option><option>09:00 PM</option><option>09:15 PM</option><option>09:30 PM</option><option>09:45 PM</option><option>10:00 PM</option><option>10:15 PM</option><option>10:30 PM</option><option>10:45 PM</option><option>11:00 PM</option><option>11:15 PM</option><option>11:30 PM</option><option>11:45 PM</option></select></div>
+        <div><label for="hf-end">Finish Time</label><select id="hf-end" name="finish"><option>12:00 AM</option><option>12:15 AM</option><option>12:30 AM</option><option>12:45 AM</option><option>01:00 AM</option><option>01:15 AM</option><option>01:30 AM</option><option>01:45 AM</option><option>02:00 AM</option><option>02:15 AM</option><option>02:30 AM</option><option>02:45 AM</option><option>03:00 AM</option><option>03:15 AM</option><option>03:30 AM</option><option>03:45 AM</option><option>04:00 AM</option><option>04:15 AM</option><option>04:30 AM</option><option>04:45 AM</option><option>05:00 AM</option><option>05:15 AM</option><option>05:30 AM</option><option>05:45 AM</option><option>06:00 AM</option><option>06:15 AM</option><option>06:30 AM</option><option>06:45 AM</option><option>07:00 AM</option><option>07:15 AM</option><option>07:30 AM</option><option>07:45 AM</option><option>08:00 AM</option><option>08:15 AM</option><option>08:30 AM</option><option>08:45 AM</option><option>09:00 AM</option><option>09:15 AM</option><option>09:30 AM</option><option>09:45 AM</option><option>10:00 AM</option><option>10:15 AM</option><option>10:30 AM</option><option>10:45 AM</option><option>11:00 AM</option><option>11:15 AM</option><option>11:30 AM</option><option>11:45 AM</option><option>12:00 PM</option><option>12:15 PM</option><option>12:30 PM</option><option>12:45 PM</option><option>01:00 PM</option><option>01:15 PM</option><option>01:30 PM</option><option>01:45 PM</option><option>02:00 PM</option><option>02:15 PM</option><option>02:30 PM</option><option>02:45 PM</option><option>03:00 PM</option><option>03:15 PM</option><option>03:30 PM</option><option>03:45 PM</option><option>04:00 PM</option><option>04:15 PM</option><option>04:30 PM</option><option>04:45 PM</option><option>05:00 PM</option><option>05:15 PM</option><option>05:30 PM</option><option>05:45 PM</option><option>06:00 PM</option><option>06:15 PM</option><option>06:30 PM</option><option>06:45 PM</option><option>07:00 PM</option><option>07:15 PM</option><option>07:30 PM</option><option>07:45 PM</option><option>08:00 PM</option><option>08:15 PM</option><option>08:30 PM</option><option>08:45 PM</option><option>09:00 PM</option><option>09:15 PM</option><option>09:30 PM</option><option>09:45 PM</option><option>10:00 PM</option><option>10:15 PM</option><option>10:30 PM</option><option>10:45 PM</option><option>11:00 PM</option><option>11:15 PM</option><option>11:30 PM</option><option>11:45 PM</option></select></div>
+      </div>
+      <p class="note full">Please note: Filling in this form doesn't automatically guarantee your booking.&nbsp; Someone will be back in touch with you with a final quote before final confirmation</p>
+      <label class="check full"><input type="checkbox" name="terms" required> I agree to the terms &amp; conditions&nbsp;<a href="/hireterms" target="_blank">View terms of booking (opens in new window)</a></label>
+    </div>
+    <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <p class="form-status" role="status" style="text-align:center;margin-top:16px"></p>
+    <button type="submit">Submit</button>
+  </form>
+</section>

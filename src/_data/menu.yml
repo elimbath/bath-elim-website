@@ -1,0 +1,23 @@
+items:
+  - label: Home
+    url: /
+  - label: About
+    url: ''
+    children:
+      - { label: What we believe, url: /what-we-believe }
+      - { label: Leadership team, url: /meet-the-team }
+      - { label: History of Bath Elim, url: /history-of-bath-elim }
+      - { label: More on our building, url: /building }
+  - label: Church Life
+    url: ''
+    children:
+      - { label: Lighthouse Kids, url: /lighthouse-kids }
+      - { label: Little Friends Toddler Group, url: /little-friends-toddler-group }
+      - { label: Precious Ladies, url: /precious-ladies }
+      - { label: Shoebox Appeal, url: /shoebox }
+  - label: Building Hire
+    url: /building-hire
+  - label: Give
+    url: /give
+  - label: Watch Again
+    url: /watch-again
