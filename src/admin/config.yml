@@ -1,7 +1,7 @@
 # Decap CMS configuration — https://decapcms.org/docs/configuration-options/
 backend:
   name: github
-  repo: YOUR-GITHUB-USER/bath-elim-website   # ← change to the real GitHub repository
+  repo: victor-gesit/bath-elim-website  # ← change to the real GitHub repository
   branch: main
   auth_endpoint: api/auth
   commit_messages:
@@ -270,7 +270,7 @@ collections:
     identifier_field: title
     summary: "{{title}}  —  /{{filename}}"
     fields:
-      - { label: Page title, name: title, widget: string, hint: "The page address is made from the title when you first save it, e.g. 'Youth Group' → /youth-group" }
+      - { label: Page title, name: title, widget: string, default: "Test Page", hint: "Change this before you first save — the page address is made from it, e.g. 'Youth Group' → /youth-group, and it can't be changed later." }
       # "Layout" switches which fields are shown (see src/admin/pages-hub.js):
       #   simple   → Page content
       #   sections → Opening text + Sections
@@ -284,7 +284,7 @@ collections:
           - { label: "Advanced — build the page from sections", value: sections }
         hint: Simple suits most pages. Advanced lets you stack ready-made sections (banners, galleries, people, videos…). You can switch at any time without losing anything.
       # Starter values: a new page opens already filled in, so editors see how it will look and just replace things.
-      # (The title is left empty on purpose: it becomes the page address.)
+      # The title starts as "Test Page"; its hint reminds editors it becomes the page address on first save.
       - { label: Top photo, name: hero, widget: image, required: false, default: /images/32195a_644574676b884324aa4a54554f28b9ab.jpg, hint: "Shows the title in big letters over the photo. Remove it for a plain heading instead." }
       - { label: Introduction, name: intro, widget: text, required: false, default: "One or two sentences introducing this page — what it is about and who it is for." }
       - { label: Page content, name: body, widget: markdown, required: false, default: "## A heading for the first part\n\nWrite your text here. You can make words **bold** or *italic*, and add [links](/) to other pages.\n\n- Use bullet points for lists\n- such as times, places or things to bring\n\n![Replace with a photo](/images/placeholders/photo.svg)\n\n## Another heading\n\nAdd as many headings, paragraphs and photos as you need. Delete anything you don't use.", buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list], editor_components: [image], modes: [rich_text, raw] }

@@ -56,6 +56,8 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addFilter("md", (s) => md.render(s || ""));
   eleventyConfig.addFilter("menuActive", menuActive);
+  // true for full web addresses (open in a new tab); safe when a link hasn't been filled in yet
+  eleventyConfig.addFilter("isExternal", (u) => /^https?:\/\//i.test(u || ""));
   eleventyConfig.addFilter("mdInline", (s) => md.renderInline(s || ""));
 
   return {

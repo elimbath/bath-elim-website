@@ -17,7 +17,8 @@
 
   const css = document.createElement("style");
   css.textContent = `
-    a[href="#/collections/${COLL}"] { display: none !important; }
+    /* hide only the sidebar entry — the editor's back arrow links to the same place */
+    a[class*="SidebarNavLink"][href="#/collections/${COLL}"] { display: none !important; }
     .ebc-hub { margin: 28px 0 40px 12px; }
     .ebc-hub-head { display: flex; align-items: center; justify-content: space-between; gap: 16px;
       background: #fff; border-radius: 5px; box-shadow: 0 2px 6px 0 rgba(68,74,87,.05), 0 1px 3px 0 rgba(68,74,87,.1);
@@ -123,6 +124,16 @@
   // ---- page editor: show the fields for the chosen Layout ----
   function adaptEditor() {
     if (!new RegExp(`^#/collections/${COLL}/(new|entries/)`).test(location.hash)) return;
+    // The back arrow says "Writing in New pages collection", but there's no "New pages" in the
+    // sidebar any more (it goes back to Pages), so call it that.
+    const back = document.querySelector(`a[href="#/collections/${COLL}"]:not([class*="SidebarNavLink"])`);
+    if (back) {
+      const walk = document.createTreeWalker(back, NodeFilter.SHOW_TEXT);
+      for (let n; (n = walk.nextNode()); ) {
+        if (/Writing in/.test(n.textContent)) { n.textContent = "Back to Pages"; break; }
+        if (/^\s*New pages\s*$/.test(n.textContent) || /^\s*collection\s*$/.test(n.textContent)) n.textContent = "";
+      }
+    }
     const field = (name) => {
       const label = document.querySelector(`label[for^="${name}-field-"]`);
       return label && { label, box: label.closest('[class*="ControlContainer"]') };

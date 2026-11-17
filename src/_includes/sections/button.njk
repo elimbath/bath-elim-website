@@ -1,6 +1,6 @@
 <section class="sec sec-button bg-{{ s.background or 'white' }}">
   <div class="container">
     {% if s.text %}<p class="sec-button-text">{{ s.text }}</p>{% endif %}
-    <a class="btn{% if s.style == 'dark' %} btn-dark{% endif %}" href="{{ s.url }}"{% if s.url.startsWith('http') %} target="_blank" rel="noopener"{% endif %}>{{ s.label }}</a>
+    <a class="btn{% if s.style == 'dark' %} btn-dark{% endif %}" href="{{ s.url or '#' }}"{% if s.url | isExternal %} target="_blank" rel="noopener"{% endif %}>{{ s.label }}</a>
   </div>
 </section>

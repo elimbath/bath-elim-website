@@ -10,10 +10,10 @@
           {%- if item.url %}<a href="{{ item.url }}" aria-haspopup="true">{{ item.label }}</a>{% else %}<button type="button" aria-haspopup="true">{{ item.label }}</button>{% endif %}
           <ul class="sub">
             {%- for c in item.children %}
-            <li><a href="{{ c.url }}"{% if c.url.startsWith("http") %} target="_blank" rel="noopener"{% endif %}>{{ c.label }}</a></li>
+            <li><a href="{{ c.url or '#' }}"{% if c.url | isExternal %} target="_blank" rel="noopener"{% endif %}>{{ c.label }}</a></li>
             {%- endfor %}
           </ul>
-          {%- else %}<a href="{{ item.url }}"{% if item.url.startsWith("http") %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>{% endif %}
+          {%- else %}<a href="{{ item.url or '#' }}"{% if item.url | isExternal %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>{% endif %}
         </li>
         {%- endfor %}
       </ul>

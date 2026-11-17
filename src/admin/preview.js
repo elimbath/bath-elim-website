@@ -15,6 +15,7 @@
   const env = new nunjucks.Environment(new Loader(), { autoescape: true });
   env.addFilter("md", (s) => md.render(s || ""));
   env.addFilter("mdInline", (s) => md.renderInline(s || ""));
+  env.addFilter("isExternal", (u) => /^https?:\/\//i.test(u || "")); // same as eleventy.config.js
   // Same logic as menuActive in eleventy.config.js
   env.addFilter("menuActive", (item, url, nav) => {
     const norm = (u) => (u || "").replace(/\/+$/, "") || "/";
