@@ -19,6 +19,7 @@ src/css, src/js, src/files (safeguarding PDF), src/_redirects
 src/admin/           ← the CMS: index.html, config.yml (which fields editors see), preview.js (live preview,
                        grid-card previews), pages-hub.js (combined Pages screen with + New page)
 functions/api/       ← Cloudflare functions: auth.js + callback.js (CMS login), [form].js (forms)
+worker.js, wrangler.jsonc ← Cloudflare Worker entry + settings (routes /api/* to functions/api/)
 eleventy.config.js   ← build settings
 _site/               ← build output (generated, not committed)
 ```
@@ -35,18 +36,21 @@ npm run cms          # (second terminal) lets http://localhost:8080/admin edit l
 
 1. **GitHub** – create a repository (e.g. `bath-elim-website`) and push this folder to its `main` branch.
    Put the repo name in `src/admin/config.yml` → `backend.repo`.
-2. **Cloudflare Pages** – Workers & Pages → Create → Pages → *Connect to Git* → pick the repo.
+2. **Cloudflare (Worker)** – Workers & Pages → Create application → *Import a repository* → pick the repo.
    - Build command: `npm run build`
-   - Build output directory: `_site`
+   - Deploy command: `npx wrangler deploy` (reads `wrangler.jsonc`: serves `_site`, and `worker.js` routes `/api/*`
+     to the handlers in `functions/api/`)
+   - Variables: add `NODE_VERSION` = `20` as a *build* variable.
+   (Deploying as a Cloudflare **Pages** project also works: build `npm run build`, output `_site`; Pages runs `functions/` itself.)
 3. **CMS login (GitHub OAuth app)** – GitHub → Settings → Developer settings → OAuth Apps → New:
    - Homepage URL: `https://<your-site>` (the `*.pages.dev` address, later `https://www.elimbath.org`)
    - Authorization callback URL: `https://<your-site>/api/callback`
-   - In Cloudflare Pages → Settings → Variables and secrets, add `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` (secret), then redeploy.
+   - In the Cloudflare project → Settings → Variables and secrets, add `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` (secret), then redeploy.
 4. **Forms** – create a free [Resend](https://resend.com) account, verify the `elimbath.org` domain, then add
    `RESEND_API_KEY` (secret), `FORM_TO_EMAIL` (who receives submissions) and
    `FORM_FROM_EMAIL` (e.g. `Bath Elim Website <website@elimbath.org>`). Until then the forms show
    "Sorry, the form could not be sent".
-5. **Domain** – in Cloudflare Pages → Custom domains, add `www.elimbath.org` (and `elimbath.org`),
+5. **Domain** – in the Cloudflare project → Settings → Domains & Routes, add `www.elimbath.org` (and `elimbath.org`),
    then point the domain's DNS at Cloudflare. Update the OAuth app URLs to the real domain.
 
 ## Adding an editor
