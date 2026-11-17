@@ -1,0 +1,4 @@
+<section class="sec sec-gallery bg-{{ s.background or 'white' }}">
+  {% if s.heading %}<div class="container"><h2 class="sec-heading">{{ s.heading }}</h2></div>{% endif %}
+  <div class="photo-row cols-{{ s.columns or 4 }}">{% for p in s.photos %}<img src="{{ p.image }}" alt="{{ p.alt or '' }}" loading="lazy">{% endfor %}</div>
+</section>

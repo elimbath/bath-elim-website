@@ -43,6 +43,7 @@ module.exports = function (eleventyConfig) {
     };
     for (const f of fs.readdirSync("src")) if (f.endsWith(".njk")) add(path.join("src", f), f);
     for (const f of fs.readdirSync("src/_includes")) if (f.endsWith(".njk")) add(path.join("src/_includes", f), f);
+    for (const f of fs.readdirSync("src/_includes/sections")) if (f.endsWith(".njk")) add(path.join("src/_includes/sections", f), "sections/" + f);
     for (const f of fs.readdirSync("src/_data")) {
       if (/\.ya?ml$/.test(f)) out.data[f.replace(/\.ya?ml$/, "")] = yaml.load(fs.readFileSync(path.join("src/_data", f), "utf8"));
     }

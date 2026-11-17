@@ -64,10 +64,11 @@
   }
 
   // Pages created in the CMS
-  CMS.registerPreviewTemplate("custom_pages", Preview((data) => {
+  const customPage = Preview((data) => {
     const ctx = { ...T.data, ...data, content: md.render(data.body || ""), page: { url: "/new-page/" } };
     return wrap(env.render("page.njk", ctx), ctx);
-  }));
+  });
+  CMS.registerPreviewTemplate("custom_pages", customPage);
 
   // Site settings: show the menu / footer they change
   CMS.registerPreviewTemplate("menu", Preview((data) => {
@@ -79,6 +80,75 @@
     const ctx = { ...T.data, settings: data, page: { url: "/" } };
     return wrap(`<p style="padding:40px 22px;color:#666;font:15px Arial">Footer preview ↓</p>`, ctx);
   }));
+
+
+  // ---------- Mini page previews on the grid-view cards ----------
+  // In grid view each card gets a scaled-down copy of the *published* page. Previews only load
+  // for cards on screen (lazy iframes), and slideshows are paused inside them (?card-preview).
+  // This adds to Decap's own card markup; if a Decap update changes it, previews just won't appear.
+  const pageUrl = {};
+  for (const [name, file] of Object.entries(PAGES)) pageUrl[name] = (T.front[file] || {}).permalink || "/";
+  const reserved = new Set(["admin", "api", "images", "css", "js", "files",
+    ...Object.keys(T.templates).filter((k) => !k.includes("/") && k.endsWith(".njk")).map((k) => k.replace(/\.njk$/, ""))]);
+  const urlFor = (href) => {
+    const m = /#\/collections\/([^/]+)\/entries\/([^/?#]+)/.exec(href || "");
+    if (!m) return null;
+    const [, coll, slug] = m;
+    if (coll === "pages") return pageUrl[slug] || null;
+    if (coll === "custom_pages") return `/${reserved.has(slug) ? slug + "-2" : slug}/`;
+    if (coll === "settings") return "/"; // menu & footer: show the home page
+    return null;
+  };
+  const SITE_WIDTH = 1280;
+  const HEADER = 76; // skip the site header (same on every page) so the card shows the page itself
+  const fit = (box) => {
+    const frame = box.firstChild;
+    if (frame) frame.style.transform = `scale(${box.clientWidth / SITE_WIDTH}) translateY(-${HEADER}px)`;
+  };
+  const resizer = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target)));
+  const makePreviewBox = (url) => {
+    const box = document.createElement("div");
+    box.className = "ebc-card-preview";
+    box.dataset.url = url;
+    const frame = document.createElement("iframe");
+    frame.src = url + "?card-preview";
+    frame.loading = "lazy";
+    frame.tabIndex = -1;
+    frame.title = "";
+    frame.setAttribute("aria-hidden", "true");
+    box.appendChild(frame);
+    requestAnimationFrame(() => fit(box));
+    resizer.observe(box);
+    return box;
+  };
+  const addCardPreviews = () => {
+    document.querySelectorAll('a[class*="GridCardLink"]').forEach((card) => {
+      const url = urlFor(card.getAttribute("href"));
+      const existing = card.querySelector(".ebc-card-preview");
+      if (existing && existing.dataset.url === url) return;
+      existing?.remove();
+      if (!url) return;
+      card.appendChild(makePreviewBox(url));
+    });
+  };
+  // used by pages-hub.js (the "New pages" area on the Pages screen)
+  window.EBC = { urlFor, makePreviewBox };
+  const style = document.createElement("style");
+  style.textContent = `
+    a[class*="GridCardLink"]:has(.ebc-card-preview) { display: flex !important; flex-direction: column; height: 100% !important; }
+    a[class*="GridCardLink"]:has(.ebc-card-preview) [class*="CardBody"] { height: auto !important; flex: none; padding: 9px 14px !important; }
+    a[class*="GridCardLink"]:has(.ebc-card-preview) [class*="CardHeading"] { margin: 0 !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block !important; }
+    .ebc-card-preview { position: relative; flex: 1; min-height: 0; overflow: hidden; border-top: 1px solid #e3e6ec;
+      background: #f3f4f7; pointer-events: none; border-radius: 0 0 5px 5px; }
+    .ebc-card-preview iframe { position: absolute; top: 0; left: 0; width: ${SITE_WIDTH}px; height: 1000px;
+      border: 0; transform-origin: 0 0; background: #fff; }`;
+  document.head.appendChild(style);
+  let queued = false;
+  new MutationObserver(() => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; addCardPreviews(); });
+  }).observe(document.body, { childList: true, subtree: true });
 })()
   .catch((e) => console.error("CMS preview setup failed", e))
   .finally(() => {

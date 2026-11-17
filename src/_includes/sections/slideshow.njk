@@ -1,0 +1,10 @@
+<section class="sec bg-{{ s.background or 'white' }}">
+  <div class="container">
+    {% if s.heading %}<h2 class="sec-heading">{{ s.heading }}</h2>{% endif %}
+    <div class="slider sec-slider">
+      {% for p in s.photos %}<img src="{{ p.image }}" alt="{{ p.alt or '' }}"{% if not loop.first %} loading="lazy"{% endif %}>{% endfor %}
+      {% if s.photos.length > 1 %}<button class="prev" aria-label="Previous photo">‹</button><button class="next" aria-label="Next photo">›</button>{% endif %}
+    </div>
+    {% if s.caption %}<p class="sec-caption">{{ s.caption }}</p>{% endif %}
+  </div>
+</section>

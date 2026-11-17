@@ -1,12 +1,26 @@
 ---
 layout: layout.njk
 ---
-{# Layout for pages created in the CMS (src/pages/*.md) #}
+{# Layout for pages created in the CMS (src/pages/*.md).
+   layout_mode "simple" (default): title + one block of content.
+   layout_mode "sections" (advanced): title + optional opening text + a stack of sections (src/_includes/sections/). #}
 {% if hero %}
 <section class="hero" style="background-image:url('{{ hero }}')">
   <h1>{{ title }}</h1>
 </section>
 {% endif %}
+{% if layout_mode == "sections" %}
+  {% if not hero or intro or (content | trim) %}
+  <section class="content-band custom-page{% if sections and sections.length %} tight{% endif %}">
+    <div class="container">
+      {% if not hero %}<h1 class="custom-title">{{ title }}</h1>{% endif %}
+      {% if intro %}<p class="custom-intro">{{ intro }}</p>{% endif %}
+      {% if content | trim %}<div class="prose">{{ content | safe }}</div>{% endif %}
+    </div>
+  </section>
+  {% endif %}
+  {% for s in sections %}{% include "sections/" + s.type + ".njk" ignore missing %}{% endfor %}
+{% else %}
 <section class="content-band custom-page">
   <div class="container">
     {% if not hero %}<h1 class="custom-title">{{ title }}</h1>{% endif %}
@@ -14,3 +28,4 @@ layout: layout.njk
     <div class="prose">{{ content | safe }}</div>
   </div>
 </section>
+{% endif %}

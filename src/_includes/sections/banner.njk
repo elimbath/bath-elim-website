@@ -1,0 +1,6 @@
+<section class="hero sec-banner{% if s.height == 'short' %} short{% endif %}" style="background-image:url('{{ s.image }}')">
+  <div class="sec-banner-text">
+    {% if s.title %}<h2>{{ s.title }}</h2>{% endif %}
+    {% if s.subtitle %}<p>{{ s.subtitle }}</p>{% endif %}
+  </div>
+</section>

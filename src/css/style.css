@@ -451,3 +451,40 @@ p { margin: 0 0 1em; }
 .prose ul, .prose ol { padding-left: 1.4em; }
 .prose a { color: var(--teal); }
 .prose blockquote { margin: 24px 0; padding: 4px 0 4px 20px; border-left: 4px solid var(--ink); font-style: italic; }
+
+/* ---------- Sections (advanced page builder) ---------- */
+.sec { padding: 50px 0; }
+.bg-white { background: var(--white); }
+.bg-grey { background: #eaeaea; }
+.bg-dark { background: var(--ink); color: var(--white); }
+.bg-dark .prose a, .bg-dark a:not(.btn) { color: #fff; }
+.bg-navy { background: var(--navy); color: var(--white); }
+.custom-page.tight { padding-bottom: 10px; }
+.prose.center { text-align: center; }
+.prose > :first-child { margin-top: 0; }
+.sec-heading { text-align: center; font: 800 clamp(22px, 3vw, 32px)/1.25 var(--font-display); letter-spacing: .1em; text-transform: uppercase; margin: 0 0 30px; }
+.sec-banner { min-height: 420px; }
+.sec-banner.short { min-height: 260px; }
+.sec-banner-text { position: relative; padding: 0 20px; }
+.sec-banner h2 { font-size: clamp(32px, 6vw, 70px); }
+.sec-banner p { position: relative; font: 300 clamp(18px, 2.4vw, 26px)/1.4 var(--font-body); margin: 18px 0 0; text-shadow: 0 1px 6px rgba(0,0,0,.4); }
+.sec-split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+.sec-split.flip .sec-split-img { order: 2; }
+.sec-split-img img { width: 100%; aspect-ratio: 4/3; object-fit: cover; box-shadow: 0 10px 16px -8px rgba(0,0,0,.45); }
+.sec-split-text h2 { margin-top: 0; }
+@media (max-width: 700px) { .sec-split { grid-template-columns: 1fr; gap: 20px; } .sec-split.flip .sec-split-img { order: 0; } }
+.sec-gallery { padding-bottom: 0; }
+.photo-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.photo-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.sec-slider { max-width: 860px; margin: 0 auto; }
+.sec-caption { text-align: center; font-style: italic; margin-top: 12px; }
+.quote.no-photo { grid-template-columns: 1fr; text-align: center; }
+.sec-ways { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 20px; }
+.sec-ways .way { min-height: 0; padding-bottom: 30px; }
+.sec-ways .way h3 { margin-top: 10px; }
+.sec-ways .way:nth-child(odd) { background: #dde8eb; }
+.sec-ways .way:nth-child(even) { background: var(--white); }
+.bg-grey .sec-ways .way:nth-child(even) { background: #f6f6f6; }
+.sec-button { text-align: center; padding: 30px 0; }
+.sec-button-text { font: 300 22px/1.4 var(--font-body); margin-bottom: 18px; }
+.sec-map .sec-heading { margin-top: 40px; }

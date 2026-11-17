@@ -1,0 +1,4 @@
+<section class="sec-map">
+  {% if s.heading %}<div class="container"><h2 class="sec-heading">{{ s.heading }}</h2></div>{% endif %}
+  <iframe class="map" title="Map: {{ s.query }}" loading="lazy" src="https://www.google.com/maps?q={{ s.query | urlencode }}&z=16&output=embed"></iframe>
+</section>

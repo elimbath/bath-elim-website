@@ -1,0 +1,8 @@
+<section class="sec bg-{{ s.background or 'grey' }}">
+  <div class="container">
+    {% if s.heading %}<h2 class="sec-heading">{{ s.heading }}</h2>{% endif %}
+    <div class="team-grid">
+      {% for p in s.people %}<div class="person"><img src="{{ p.photo }}" alt="{{ p.name }}" loading="lazy"><p class="name">{{ p.name }}</p>{% if p.role %}<p class="role">{{ p.role }}</p>{% endif %}</div>{% endfor %}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,8 @@
+<section class="sec bg-{{ s.background or 'white' }}">
+  <div class="container">
+    <div class="quote{% if not s.photo %} no-photo{% endif %}">
+      {% if s.photo %}<img src="{{ s.photo }}" alt="{{ s.author }}">{% endif %}
+      <h2>{{ s.text }}{% if s.author %}<br><br>{{ s.author }}{% endif %}</h2>
+    </div>
+  </div>
+</section>

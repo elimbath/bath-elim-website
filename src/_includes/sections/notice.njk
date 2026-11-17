@@ -1,0 +1,3 @@
+<section class="notice" style="{% if s.background_color %}background-color:{{ s.background_color }};{% endif %}">
+  {% if s.link %}<a href="{{ s.link }}">{% endif %}<img src="{{ s.image }}" alt="{{ s.alt or '' }}" loading="lazy">{% if s.link %}</a>{% endif %}
+</section>

@@ -1,0 +1,6 @@
+<section class="sec bg-{{ s.background or 'white' }}">
+  <div class="container prose{% if s.align == 'center' %} center{% endif %}">
+    {% if s.heading %}<h2>{{ s.heading }}</h2>{% endif %}
+    {{ s.text | md | safe }}
+  </div>
+</section>

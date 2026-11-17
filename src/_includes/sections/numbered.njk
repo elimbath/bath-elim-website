@@ -1,0 +1,10 @@
+<section class="sec bg-{{ s.background or 'white' }}">
+  <div class="container">
+    {% if s.heading %}<div class="three-ways"><h2>{{ s.heading }}</h2></div>{% endif %}
+    <div class="ways sec-ways">
+      {% for w in s.items %}
+      <div class="way"><div class="num">{{ loop.index }}</div><h3>{{ w.title }}</h3>{{ w.text | md | safe }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

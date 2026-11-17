@@ -12,10 +12,13 @@ document.querySelectorAll('.nav li > button').forEach((btn) => {
   btn.addEventListener('click', () => btn.parentElement.classList.toggle('open'));
 });
 
+// Inside the CMS's grid-view mini previews (?card-preview): keep things still.
+const cardPreview = new URLSearchParams(location.search).has('card-preview');
+
 // Image sliders (building hire)
 document.querySelectorAll('.slider').forEach((slider) => {
   const imgs = [...slider.querySelectorAll('img')];
-  if (imgs.length < 2) { imgs[0]?.classList.add('on'); return; }
+  if (imgs.length < 2 || cardPreview) { imgs[0]?.classList.add('on'); return; }
   let i = 0;
   const show = (n) => { imgs[i].classList.remove('on'); i = (n + imgs.length) % imgs.length; imgs[i].classList.add('on'); };
   imgs[0].classList.add('on');

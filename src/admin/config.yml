@@ -260,7 +260,7 @@ collections:
   - name: custom_pages
     label: New pages
     label_singular: page
-    description: Extra pages you create yourself. After creating one, add it to the menu under Site settings → Menu.
+    description: Pages you create yourself.
     folder: src/pages
     extension: md
     format: frontmatter
@@ -268,12 +268,182 @@ collections:
     delete: true
     slug: "{{slug}}"
     identifier_field: title
-    summary: "{{title}}  —  /{{slug}}"
+    summary: "{{title}}  —  /{{filename}}"
     fields:
       - { label: Page title, name: title, widget: string, hint: "The page address is made from the title when you first save it, e.g. 'Youth Group' → /youth-group" }
-      - { label: Top photo, name: hero, widget: image, required: false, hint: Shows the title in big letters over the photo. }
-      - { label: Introduction, name: intro, widget: text, required: false }
-      - { label: Page content, name: body, widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list], editor_components: [image], modes: [rich_text, raw] }
+      # "Layout" switches which fields are shown (see src/admin/pages-hub.js):
+      #   simple   → Page content
+      #   sections → Opening text + Sections
+      # Hidden fields keep their content, so switching back and forth never loses anything.
+      - label: Layout
+        name: layout_mode
+        widget: select
+        default: simple
+        options:
+          - { label: "Simple — one block of text and photos", value: simple }
+          - { label: "Advanced — build the page from sections", value: sections }
+        hint: Simple suits most pages. Advanced lets you stack ready-made sections (banners, galleries, people, videos…). You can switch at any time without losing anything.
+      # Starter values: a new page opens already filled in, so editors see how it will look and just replace things.
+      # (The title is left empty on purpose: it becomes the page address.)
+      - { label: Top photo, name: hero, widget: image, required: false, default: /images/32195a_644574676b884324aa4a54554f28b9ab.jpg, hint: "Shows the title in big letters over the photo. Remove it for a plain heading instead." }
+      - { label: Introduction, name: intro, widget: text, required: false, default: "One or two sentences introducing this page — what it is about and who it is for." }
+      - { label: Page content, name: body, widget: markdown, required: false, default: "## A heading for the first part\n\nWrite your text here. You can make words **bold** or *italic*, and add [links](/) to other pages.\n\n- Use bullet points for lists\n- such as times, places or things to bring\n\n![Replace with a photo](/images/placeholders/photo.svg)\n\n## Another heading\n\nAdd as many headings, paragraphs and photos as you need. Delete anything you don't use.", buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list], editor_components: [image], modes: [rich_text, raw] }
+      - label: Sections
+        name: sections
+        label_singular: section
+        widget: list
+        required: false
+        hint: Click "Add section" and choose a type. Drag to reorder.
+        # Every field has a starter value, so a newly added section shows up filled in
+        # (with church photos or obvious placeholders) and editors just replace what they need.
+        types:
+          - label: Banner (big photo with title)
+            name: banner
+            widget: object
+            summary: "Banner — {{fields.title}}"
+            fields:
+              - { label: Photo, name: image, widget: image, default: "/images/32195a_644574676b884324aa4a54554f28b9ab.jpg" }
+              - { label: Title, name: title, widget: string, required: false, default: "Your heading here" }
+              - { label: Subtitle, name: subtitle, widget: string, required: false, default: "A short line about this part of the page" }
+              - { label: Height, name: height, widget: select, required: false, default: normal, options: [ { label: Normal, value: normal }, { label: Short, value: short } ] }
+          - label: Text
+            name: text
+            widget: object
+            summary: "Text — {{fields.heading}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false, default: "Section heading" }
+              - { label: Text, name: text, <<: *md, default: "Write your text here. You can make words **bold** or *italic*, add [links](/) and bulleted lists.\n\nStart a new paragraph by pressing Enter." }
+              - { label: Alignment, name: align, widget: select, required: false, default: left, options: [ { label: Left, value: left }, { label: Centred, value: center } ] }
+              - &background { label: Background, name: background, widget: select, required: false, default: white, options: [ { label: White, value: white }, { label: Light grey, value: grey }, { label: Dark slate, value: dark }, { label: Navy, value: navy } ] }
+          - label: Photo and text side by side
+            name: photo_text
+            widget: object
+            summary: "Photo + text — {{fields.heading}}"
+            fields:
+              - { label: Photo, name: image, widget: image, default: "/images/32195a_b232bcef3579425eb44dc5528bf142ce.jpg" }
+              - { label: Photo description (for screen readers), name: alt, widget: string, required: false, default: "" }
+              - { label: Photo position, name: image_side, widget: select, required: false, default: left, options: [ { label: Left, value: left }, { label: Right, value: right } ] }
+              - { label: Heading, name: heading, widget: string, required: false, default: "Heading" }
+              - { label: Text, name: text, <<: *md, default: "A few sentences that go with the photo. Tell people what happens, when and where, and who it's for." }
+              - { label: Button label, name: button_label, widget: string, required: false, default: "Find out more" }
+              - { label: Button link, name: button_url, widget: string, required: false, default: "/", hint: *link_hint }
+              - *background
+          - label: Photo gallery (row of photos)
+            name: gallery
+            widget: object
+            summary: "Gallery — {{fields.heading}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false, default: "Photos" }
+              - { label: Photos per row, name: columns, widget: select, required: false, default: "4", options: ["2", "3", "4"] }
+              - label: Photos
+                name: photos
+                widget: list
+                default:
+                  - { image: "/images/32195a_c5c35f6346894b12a33f921835b121d2.jpg" }
+                  - { image: "/images/32195a_03aaded8bfc44839af8fa97e7044ce4d.jpg" }
+                  - { image: "/images/32195a_10d8f62b1da64739b1c7e18cce6c26db.jpg" }
+                  - { image: "/images/32195a_79779d37d4884ec99d5077e3f09f7f7b.jpg" }
+                fields: [ { label: Photo, name: image, widget: image }, { label: Description, name: alt, widget: string, required: false } ]
+              - *background
+          - label: Slideshow
+            name: slideshow
+            widget: object
+            summary: "Slideshow — {{fields.heading}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false, default: "Take a look" }
+              - label: Photos
+                name: photos
+                widget: list
+                default:
+                  - { image: "/images/32195a_dde24c470604495f86bf358c9d97c3f3.jpg" }
+                  - { image: "/images/32195a_a353168d7ed64f0894807366e048e6ef.jpg" }
+                  - { image: "/images/32195a_42add0d2dfb7418580ba17c3def64323.jpg" }
+                fields: [ { label: Photo, name: image, widget: image }, { label: Description, name: alt, widget: string, required: false } ]
+              - { label: Caption, name: caption, widget: string, required: false, default: "A short caption under the photos" }
+              - *background
+          - label: Quote with photo
+            name: quote
+            widget: object
+            summary: "Quote — {{fields.author}}"
+            fields:
+              - { label: Photo, name: photo, widget: image, required: false, default: /images/placeholders/person.svg }
+              - { label: Quote, name: text, widget: text, default: "\"Put a short quote here — something someone has said about this ministry or event.\"" }
+              - { label: Said by, name: author, widget: string, required: false, default: "Name of the person" }
+              - *background
+          - label: Numbered boxes
+            name: numbered
+            widget: object
+            summary: "Numbered boxes — {{fields.heading}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false, default: "Three ways to get involved" }
+              - label: Boxes
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                default:
+                  - { title: "First idea", text: "A sentence or two explaining the first point." }
+                  - { title: "Second idea", text: "A sentence or two explaining the second point." }
+                  - { title: "Third idea", text: "A sentence or two explaining the third point." }
+                fields: [ { label: Title, name: title, widget: string }, { label: Text, name: text, widget: text } ]
+              - *background
+          - label: People (photos with names)
+            name: people
+            widget: object
+            summary: "People — {{fields.heading}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false, default: "Meet the team" }
+              - label: People
+                name: people
+                widget: list
+                summary: "{{fields.name}}"
+                default:
+                  - { photo: /images/placeholders/person.svg, name: "First person", role: "Their role" }
+                  - { photo: /images/placeholders/person.svg, name: "Second person", role: "Their role" }
+                  - { photo: /images/placeholders/person.svg, name: "Third person", role: "Their role" }
+                fields: [ { label: Photo, name: photo, widget: image }, { label: Name, name: name, widget: string }, { label: Role, name: role, widget: string, required: false } ]
+              - { label: Background, name: background, widget: select, required: false, default: grey, options: [ { label: White, value: white }, { label: Light grey, value: grey }, { label: Dark slate, value: dark }, { label: Navy, value: navy } ] }
+          - label: Videos (YouTube thumbnails)
+            name: videos
+            widget: object
+            summary: "Videos — {{fields.heading}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false, default: "Watch" }
+              - label: Videos
+                name: videos
+                widget: list
+                summary: "{{fields.title}}"
+                default:
+                  - { title: "Video title", thumbnail: /images/placeholders/photo.svg, url: "https://www.youtube.com/@elimbath4131" }
+                  - { title: "Video title", thumbnail: /images/placeholders/photo.svg, url: "https://www.youtube.com/@elimbath4131" }
+                  - { title: "Video title", thumbnail: /images/placeholders/photo.svg, url: "https://www.youtube.com/@elimbath4131" }
+                fields: [ { label: Title, name: title, widget: string }, { label: Thumbnail picture, name: thumbnail, widget: image }, { label: YouTube link, name: url, widget: string } ]
+              - *background
+          - label: Button
+            name: button
+            widget: object
+            summary: "Button — {{fields.label}}"
+            fields:
+              - { label: Text above the button, name: text, widget: string, required: false, default: "Want to find out more?" }
+              - { label: Button label, name: label, widget: string, default: "Get in touch" }
+              - { label: Button link, name: url, widget: string, default: "/", hint: *link_hint }
+              - { label: Style, name: style, widget: select, required: false, default: dark, options: [ { label: Light, value: light }, { label: Dark, value: dark } ] }
+              - *background
+          - label: Poster / notice
+            name: notice
+            widget: object
+            summary: "Poster — {{fields.alt}}"
+            fields:
+              - { label: Image, name: image, widget: image, default: /images/placeholders/poster.svg }
+              - { label: Description (for screen readers), name: alt, widget: string, default: "Describe the poster, e.g. Christmas carol service, Sunday 20 December, 6pm" }
+              - { label: Link, name: link, widget: string, required: false, default: "" }
+              - { label: Background colour, name: background_color, widget: string, required: false, default: "#142940", hint: "e.g. #142940" }
+          - label: Map
+            name: map
+            widget: object
+            summary: "Map — {{fields.query}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false, default: "Find us" }
+              - { label: Address, name: query, widget: string, default: "Bath Elim Church, Charlotte Street, Bath BA1 2ND" }
 
   - name: settings
     label: Site settings

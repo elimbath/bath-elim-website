@@ -1,0 +1,10 @@
+<section class="sec bg-{{ s.background or 'white' }}">
+  <div class="container sec-split{% if s.image_side == 'right' %} flip{% endif %}">
+    <div class="sec-split-img"><img src="{{ s.image }}" alt="{{ s.alt or '' }}" loading="lazy"></div>
+    <div class="sec-split-text prose">
+      {% if s.heading %}<h2>{{ s.heading }}</h2>{% endif %}
+      {{ s.text | md | safe }}
+      {% if s.button_url %}<p><a class="btn" href="{{ s.button_url }}">{{ s.button_label or 'Find out more' }}</a></p>{% endif %}
+    </div>
+  </div>
+</section>

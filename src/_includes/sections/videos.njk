@@ -1,0 +1,8 @@
+<section class="sec bg-{{ s.background or 'white' }}">
+  <div class="container">
+    {% if s.heading %}<h2 class="sec-heading">{{ s.heading }}</h2>{% endif %}
+    <div class="video-grid">
+      {% for v in s.videos %}<a href="{{ v.url }}" target="_blank" rel="noopener" title="{{ v.title }}"><img src="{{ v.thumbnail }}" alt="{{ v.title }}" loading="lazy"></a>{% endfor %}
+    </div>
+  </div>
+</section>
