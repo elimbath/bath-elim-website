@@ -72,11 +72,57 @@
   CMS.registerPreviewTemplate("custom_pages", customPage);
 
   // Site settings: show the menu / footer they change
+  // Menu: when the editor changes an item's sub-items (adds, edits or removes one), open that item's
+  // drop-down in the preview so they can see it; editing a main item closes it again. (The preview
+  // only receives the menu's content, not which box has focus, so this works from what changed.)
+  // On a narrow preview the mobile menu is shown opened, which lists every sub-item anyway.
+  let lastItems = null;
+  let openIndex = null;
+  const sameJSON = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
   CMS.registerPreviewTemplate("menu", Preview((data) => {
+    const items = data.items || [];
+    if (lastItems) {
+      if (items.length !== lastItems.length) openIndex = null;
+      else {
+        const sub = items.findIndex((it, i) => !sameJSON(it.children, lastItems[i].children));
+        const main = items.findIndex((it, i) => it.label !== lastItems[i].label || it.url !== lastItems[i].url);
+        if (sub >= 0) openIndex = sub;
+        else if (main >= 0) openIndex = null;
+      }
+    }
+    lastItems = JSON.parse(JSON.stringify(items));
+
     const ctx = { ...T.data, menu: data, page: { url: "/" } };
-    return env.render("header.njk", ctx) +
-      `<p style="padding:30px 22px;color:#666;font:15px Arial">Menu preview — hover or click the items above to see the drop-downs.</p>`;
+    const doc = new DOMParser().parseFromString(env.render("header.njk", ctx), "text/html");
+    doc.querySelector(".nav")?.classList.add("open");
+    const li = openIndex === null ? null : doc.querySelectorAll(".nav > ul > li")[openIndex];
+    if (li && li.querySelector(".sub")) li.classList.add("open");
+    return doc.body.innerHTML +
+      `<p style="padding:30px 22px;color:#666;font:15px Arial">Menu preview — hover or click the items above to see the drop-downs. ` +
+      `While you edit an item's sub-items, its drop-down stays open here.</p>`;
   }));
+  // Also follow where the editor is typing: clicking into a sub-item opens its drop-down at once,
+  // clicking into a main item closes it (the preview doesn't re-render on focus, so update it here).
+  document.addEventListener("focusin", (e) => {
+    if (!/\/settings\/entries\/menu/.test(location.hash) || !lastItems) return;
+    let subs = null;
+    for (let el = e.target; el && el !== document.body; el = el.parentElement) {
+      if (el.querySelector(':scope > label[for^="children-field-"], :scope > * > label[for^="children-field-"]')) { subs = el; break; }
+    }
+    let index = null;
+    if (subs) {
+      for (let el = subs.parentElement; el && el !== document.body; el = el.parentElement) {
+        const label = el.querySelector('input[id^="label-field-"]');
+        if (label) { index = lastItems.findIndex((it) => it.label === label.value); break; }
+      }
+      if (index < 0) index = null;
+    }
+    if (index === openIndex) return;
+    openIndex = index;
+    const frame = [...document.querySelectorAll("iframe")].find((f) => f.contentDocument?.querySelector(".site-header"));
+    frame?.contentDocument.querySelectorAll(".nav > ul > li").forEach((li, i) =>
+      li.classList.toggle("open", i === openIndex && !!li.querySelector(".sub")));
+  });
   CMS.registerPreviewTemplate("settings", Preview((data) => {
     const ctx = { ...T.data, settings: data, page: { url: "/" } };
     return wrap(`<p style="padding:40px 22px;color:#666;font:15px Arial">Footer preview ↓</p>`, ctx);
@@ -132,8 +178,11 @@
       card.appendChild(makePreviewBox(url));
     });
   };
-  // used by pages-hub.js (the "New pages" area on the Pages screen)
-  window.EBC = { urlFor, makePreviewBox };
+  // used by pages-hub.js (the "New pages" area on the Pages screen) and link-widget.js
+  const noSlash = (u) => (u === "/" ? u : u.replace(/\/+$/, ""));
+  const builtInPages = Object.keys(PAGES).map((name) => ({
+    title: (T.pageLabels || {})[name] || name, url: noSlash(pageUrl[name] || "/"), kind: "page" }));
+  window.EBC = Object.assign(window.EBC || {}, { urlFor, makePreviewBox, builtInPages, noSlash });
   const style = document.createElement("style");
   style.textContent = `
     a[class*="GridCardLink"]:has(.ebc-card-preview) { display: flex !important; flex-direction: column; height: 100% !important; }

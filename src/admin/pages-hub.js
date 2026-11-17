@@ -50,6 +50,22 @@
 
   // ---- reading the list of new pages ----
   let cache = null;
+  // Pages deleted in the last couple of minutes. GitHub can take a moment to reflect a deletion,
+  // so these are left out of the list even if a slightly stale listing still includes them.
+  const DELETED_KEY = "ebc-recently-deleted";
+  const recentlyDeleted = () => {
+    try {
+      const all = JSON.parse(sessionStorage.getItem(DELETED_KEY) || "{}");
+      for (const k of Object.keys(all)) if (Date.now() - all[k] > 120000) delete all[k];
+      return all;
+    } catch { return {}; }
+  };
+  window.addEventListener("ebc:deleted", (e) => {
+    if (e.detail.collection !== COLL) return;
+    const all = recentlyDeleted();
+    all[e.detail.slug] = Date.now();
+    try { sessionStorage.setItem(DELETED_KEY, JSON.stringify(all)); } catch {}
+  });
   const parse = (text, path) => {
     const fm = (/^---\n([\s\S]*?)\n---/.exec(text) || [])[1] || "";
     const get = (k) => ((new RegExp(`^${k}:\\s*(.*)$`, "m").exec(fm) || [])[1] || "").trim().replace(/^(['"])(.*)\1$/, "$2");
@@ -61,16 +77,19 @@
     try { user = JSON.parse(localStorage.getItem("decap-cms-user") || "{}"); } catch {}
     if (user.backendName === "proxy") {
       const res = await fetch("http://localhost:8081/api/v1", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "entriesByFolder", params: { branch: "main", folder: FOLDER, extension: "md", depth: 1 } }),
       });
       return (await res.json()).map((e) => parse(e.data, e.file.path));
     }
     if (!user.token) return [];
-    const cfg = await (await fetch("/admin/config.yml")).text();
+    const cfg = await (await fetch("/admin/config.yml", { cache: "no-store" })).text();
     const repo = (/^\s*repo:\s*(\S+)/m.exec(cfg) || [])[1];
     const branch = (/^\s*branch:\s*(\S+)/m.exec(cfg) || [])[1] || "main";
+    // cache: "no-store" — GitHub lets browsers reuse a listing for 60 seconds, which would show
+    // deleted pages as still there (and hide brand-new ones) for up to a minute.
     const gh = (path, raw) => fetch(`https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`, {
+      cache: "no-store",
       headers: { Authorization: `token ${user.token}`, Accept: raw ? "application/vnd.github.raw" : "application/vnd.github+json" },
     });
     const res = await gh(FOLDER);
@@ -80,10 +99,15 @@
   }
   const refresh = () => {
     cache = loadPages()
+      .then((list) => { const gone = recentlyDeleted(); return list.filter((p) => !gone[p.slug]); })
       .then((list) => list.sort((a, b) => a.title.localeCompare(b.title)))
       .catch((e) => { console.warn("Could not list new pages", e); return null; });
     return cache;
   };
+
+  // shared with link-widget.js (suggests pages when typing a link)
+  window.EBC = window.EBC || {};
+  window.EBC.listCustomPages = () => cache || refresh();
 
   // ---- building the UI ----
   const newButton = (extraClass) => {

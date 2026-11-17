@@ -47,6 +47,12 @@ module.exports = function (eleventyConfig) {
     for (const f of fs.readdirSync("src/_data")) {
       if (/\.ya?ml$/.test(f)) out.data[f.replace(/\.ya?ml$/, "")] = yaml.load(fs.readFileSync(path.join("src/_data", f), "utf8"));
     }
+    // Friendly names of the built-in pages (as shown in the CMS), for the link picker.
+    try {
+      const cms = yaml.load(fs.readFileSync("src/admin/config.yml", "utf8"));
+      const pages = (cms.collections || []).find((c) => c.name === "pages");
+      out.pageLabels = Object.fromEntries((pages?.files || []).map((f) => [f.name, f.label]));
+    } catch (e) { out.pageLabels = {}; }
     fs.mkdirSync(path.join(dir.output, "admin"), { recursive: true });
     fs.writeFileSync(path.join(dir.output, "admin", "preview-templates.json"), JSON.stringify(out));
   });

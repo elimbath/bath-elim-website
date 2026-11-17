@@ -1,7 +1,7 @@
 # Decap CMS configuration — https://decapcms.org/docs/configuration-options/
 backend:
   name: github
-  repo: victor-gesit/bath-elim-website  # ← change to the real GitHub repository
+  repo: elimbath/bath-elim-website
   branch: main
   auth_endpoint: api/auth
   commit_messages:
@@ -20,7 +20,6 @@ public_folder: /images
 
 # Reusable field shapes
 _md: &md { widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, bulleted-list, numbered-list], editor_components: [], modes: [rich_text, raw] }
-_link_hint: &link_hint "A page on this site like /give, or a full web address like https://…"
 
 collections:
   - name: pages
@@ -59,7 +58,7 @@ collections:
               - { label: Show on the website, name: show, widget: boolean, default: true }
               - { label: Image, name: image, widget: image }
               - { label: Description (for screen readers), name: alt, widget: string }
-              - { label: Link, name: link, widget: string, required: false }
+              - { label: Link, name: link, widget: pagelink, required: false }
               - { label: Background colour, name: background_color, widget: string, required: false, hint: "e.g. #142940" }
               - { label: Background picture, name: background_image, widget: image, required: false }
           - label: "I'm New"
@@ -125,7 +124,7 @@ collections:
               - { label: Photo, name: image, widget: image }
               - { label: Text, name: text, <<: *md }
               - { label: Button label, name: button_label, widget: string, required: false }
-              - { label: Button link, name: button_url, widget: string, required: false }
+              - { label: Button link, name: button_url, widget: pagelink, required: false }
           - { label: Closing text, name: closing, <<: *md }
 
       - name: building
@@ -326,7 +325,7 @@ collections:
               - { label: Heading, name: heading, widget: string, required: false, default: "Heading" }
               - { label: Text, name: text, <<: *md, default: "A few sentences that go with the photo. Tell people what happens, when and where, and who it's for." }
               - { label: Button label, name: button_label, widget: string, required: false, default: "Find out more" }
-              - { label: Button link, name: button_url, widget: string, required: false, default: "/", hint: *link_hint }
+              - { label: Button link, name: button_url, widget: pagelink, required: false, default: "/" }
               - *background
           - label: Photo gallery (row of photos)
             name: gallery
@@ -425,7 +424,7 @@ collections:
             fields:
               - { label: Text above the button, name: text, widget: string, required: false, default: "Want to find out more?" }
               - { label: Button label, name: label, widget: string, default: "Get in touch" }
-              - { label: Button link, name: url, widget: string, default: "/", hint: *link_hint }
+              - { label: Button link, name: url, widget: pagelink, default: "/" }
               - { label: Style, name: style, widget: select, required: false, default: dark, options: [ { label: Light, value: light }, { label: Dark, value: dark } ] }
               - *background
           - label: Poster / notice
@@ -435,7 +434,7 @@ collections:
             fields:
               - { label: Image, name: image, widget: image, default: /images/placeholders/poster.svg }
               - { label: Description (for screen readers), name: alt, widget: string, default: "Describe the poster, e.g. Christmas carol service, Sunday 20 December, 6pm" }
-              - { label: Link, name: link, widget: string, required: false, default: "" }
+              - { label: Link, name: link, widget: pagelink, required: false, default: "" }
               - { label: Background colour, name: background_color, widget: string, required: false, default: "#142940", hint: "e.g. #142940" }
           - label: Map
             name: map
@@ -459,7 +458,7 @@ collections:
             hint: Drag to reorder. An item with sub-items becomes a drop-down.
             fields:
               - { label: Label, name: label, widget: string }
-              - { label: Link, name: url, widget: string, required: false, hint: "Leave empty for a drop-down heading. Otherwise a page like /give or a full web address." }
+              - { label: Link, name: url, widget: pagelink, required: false, help: "Leave empty for a drop-down heading. Otherwise start typing a page name and pick it from the list, or paste a full web address (https://…)." }
               - label: Sub-items (drop-down)
                 name: children
                 widget: list
@@ -467,7 +466,7 @@ collections:
                 summary: "{{fields.label}}"
                 fields:
                   - { label: Label, name: label, widget: string }
-                  - { label: Link, name: url, widget: string, hint: *link_hint }
+                  - { label: Link, name: url, widget: pagelink }
       - name: settings
         label: Footer & contact details
         file: src/_data/settings.yml

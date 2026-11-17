@@ -17,7 +17,9 @@ src/_includes/sections/ ← one template per section type for advanced pages
 src/images/          ← photos (CMS uploads land here too)
 src/css, src/js, src/files (safeguarding PDF), src/_redirects
 src/admin/           ← the CMS: index.html, config.yml (which fields editors see), preview.js (live preview,
-                       grid-card previews), pages-hub.js (combined Pages screen with + New page)
+                       grid-card previews), pages-hub.js (combined Pages screen with + New page),
+                       dialogs.js (CMS-styled confirm dialogs instead of browser pop-ups),
+                       link-widget.js (link boxes that suggest the site's pages as you type)
 functions/api/       ← Cloudflare functions: auth.js + callback.js (CMS login), [form].js (forms)
 worker.js, wrangler.jsonc ← Cloudflare Worker entry + settings (routes /api/* to functions/api/)
 eleventy.config.js   ← build settings
@@ -76,7 +78,9 @@ Editors need a (free) GitHub account. Add them to the repository as a collaborat
   - The address comes from the title (`Youth Group` → `/youth-group`). If it clashes with an existing
     page it gets `-2` added.
 - **Edit the menu** (*Site settings → Menu*): add, rename, reorder or remove items and drop-downs.
-  New pages don't appear in the menu until they're added here.
+  New pages don't appear in the menu until they're added here. In any **Link** box (menu, buttons, notices)
+  start typing a page's name and pick it from the list — no need to know its address. Picking a page for a
+  menu item with an empty Label fills the Label in too. Full web addresses (https://…) can still be pasted.
 - **Footer details** (*Site settings → Footer & contact details*).
 
 **Grid view** (the grid icon above any page list) shows a small live preview of each published page on its
