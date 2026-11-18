@@ -12,8 +12,6 @@ items:
         url: /history-of-bath-elim
       - label: More on our building
         url: /building
-      - label: Test page
-        url: /test-page
   - label: Church Life
     url: ""
     children:
