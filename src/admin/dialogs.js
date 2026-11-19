@@ -40,13 +40,13 @@
   const WORDING = [
     [/delete this published entry, as well as your unsaved changes/i, () => ({
       title: "Delete this page?", danger: true, ok: "Delete page",
-      text: `${pageTitle()} will be removed from the website, and the changes you haven't saved will be lost.` })],
+      text: `${pageTitle()} will be removed from the website, and the changes you haven't published will be lost.` })],
     [/delete this published entry/i, () => ({
       title: "Delete this page?", danger: true, ok: "Delete page",
       text: `${pageTitle()} will be removed from the website within a minute or two. If it's in the menu, remove it there too (Site settings → Menu).` })],
     [/leave this page|unsaved changes.*leave/i, () => ({
-      title: "Leave without saving?", danger: true, ok: "Leave", cancel: "Stay",
-      text: "You have changes that haven't been saved. If you leave now they'll be lost." })],
+      title: "Leave without publishing?", danger: true, ok: "Leave", cancel: "Stay",
+      text: "Your changes haven't been published, and nothing is kept until you click Publish. If you leave now they'll be lost." })],
     [/delete selected media|delete this file/i, () => ({
       title: "Delete this image?", danger: true, ok: "Delete",
       text: "It will be removed from the image library. Any page still using it will show a broken image." })],

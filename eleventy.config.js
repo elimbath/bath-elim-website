@@ -25,6 +25,9 @@ module.exports = function (eleventyConfig) {
     "src/js": "js",
     "src/files": "files",
     "src/admin": "admin",
+    // the two guides, linked from Docs in the CMS sidebar
+    "docs/how-the-website-works.html": "admin/docs/how-the-website-works.html",
+    "docs/editing-guide": "admin/docs/editing-guide",
     "src/_redirects": "_redirects",
     // browser builds used by the CMS live preview (same versions as the real build)
     "node_modules/nunjucks/browser/nunjucks.min.js": "admin/vendor/nunjucks.min.js",

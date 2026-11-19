@@ -181,7 +181,11 @@
       location.replace("#/collections/pages");
       return;
     }
-    if (route !== "#/collections/pages") return;
+    if (route !== "#/collections/pages") {
+      // Decap reuses the heading area on other collection screens, so take the button away there.
+      document.querySelectorAll(".ebc-top-new").forEach((b) => b.remove());
+      return;
+    }
     const firstCard = document.querySelector('a[href^="#/collections/pages/entries/"]');
     if (!firstCard) return;
     const grid = !!document.querySelector('a[class*="GridCardLink"]');
@@ -207,13 +211,17 @@
         <div class="ebc-body"><p class="ebc-empty">Loading…</p></div>`;
       hub.querySelector(".ebc-hub-head").appendChild(newButton());
       container.after(hub);
-      // line the header up with the right edge of the fixed-page cards above
-      const cards = [...container.querySelectorAll('a[href^="#/collections/pages/entries/"]')];
-      const right = Math.max(...cards.map((c) => c.getBoundingClientRect().right));
-      if (isFinite(right)) hub.style.maxWidth = Math.max(0, right - hub.getBoundingClientRect().left) + "px";
       (cache || refresh()).then((list) => renderList(hub, list, grid));
     } else if (hub.querySelector(".ebc-body").dataset.view !== (grid ? "grid" : "list") && cache) {
       cache.then((list) => renderList(hub, list, grid));
+    }
+    // Line the header up with the right edge of the fixed-page cards above. Measured every time,
+    // because the cards are still being laid out when the area is first added (and list/grid differ).
+    const cards = [...container.querySelectorAll('a[href^="#/collections/pages/entries/"]')];
+    const right = Math.max(...cards.map((c) => c.getBoundingClientRect().right));
+    if (isFinite(right) && right > 0) {
+      const w = Math.max(0, right - hub.getBoundingClientRect().left) + "px";
+      if (hub.style.maxWidth !== w) hub.style.maxWidth = w;
     }
   }
 

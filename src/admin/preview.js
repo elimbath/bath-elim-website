@@ -148,21 +148,64 @@
   };
   const SITE_WIDTH = 1280;
   const HEADER = 76; // skip the site header (same on every page) so the card shows the page itself
+  // Site settings cards show the part of the site they change, not the whole home page:
+  //   Menu   → the home page at phone width with the menu opened (it lists every item and sub-item)
+  //   Footer → the bottom of the home page (the frame is made as tall as the whole page and shifted
+  //            up, rather than scrolled, because browsers reset a frame's scroll position on reload)
+  const CARD_VIEWS = {
+    "settings/menu": { width: 480, header: 0, ready: (doc) => doc.querySelector(".nav")?.classList.add("open") },
+    "settings/settings": { bottom: true },
+  };
+  const viewFor = (href) => {
+    const m = /#\/collections\/([^/]+)\/entries\/([^/?#]+)/.exec(href || "");
+    return (m && CARD_VIEWS[`${m[1]}/${m[2]}`]) || null;
+  };
   const fit = (box) => {
     const frame = box.firstChild;
-    if (frame) frame.style.transform = `scale(${box.clientWidth / SITE_WIDTH}) translateY(-${HEADER}px)`;
+    if (!frame) return;
+    const width = +box.dataset.width || SITE_WIDTH;
+    const scale = box.clientWidth / width;
+    let shift = box.dataset.header !== undefined ? +box.dataset.header : HEADER;
+    if (box.dataset.bottom) {
+      let pageHeight = 0;
+      try { pageHeight = frame.contentDocument.documentElement.scrollHeight; } catch (e) { /* not loaded yet */ }
+      const visible = scale > 0 ? box.clientHeight / scale : 0;
+      if (pageHeight > visible && visible > 0) {
+        frame.style.height = pageHeight + "px";
+        shift = pageHeight - visible;
+      }
+    } else if (box.dataset.view && scale > 0 && box.clientHeight > 0) {
+      frame.style.height = Math.ceil(box.clientHeight / scale + shift) + "px";
+    }
+    frame.style.width = width + "px";
+    frame.style.transform = `scale(${scale}) translateY(-${shift}px)`;
   };
   const resizer = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target)));
-  const makePreviewBox = (url) => {
+  const makePreviewBox = (url, view) => {
     const box = document.createElement("div");
     box.className = "ebc-card-preview";
     box.dataset.url = url;
+    if (view) {
+      box.dataset.view = "1";
+      if (view.width) box.dataset.width = view.width;
+      if (view.header !== undefined) box.dataset.header = view.header;
+      if (view.bottom) box.dataset.bottom = "1";
+    }
     const frame = document.createElement("iframe");
     frame.src = url + "?card-preview";
     frame.loading = "lazy";
     frame.tabIndex = -1;
     frame.title = "";
     frame.setAttribute("aria-hidden", "true");
+    if (view) {
+      // Once the page has loaded (and a little later, as photos and fonts change its height),
+      // apply the view and line the card up again.
+      const apply = () => {
+        try { if (view.ready) view.ready(frame.contentDocument, frame.contentWindow); } catch (e) { /* shows the top of the page */ }
+        fit(box);
+      };
+      frame.addEventListener("load", () => [0, 500, 2000].forEach((ms) => setTimeout(apply, ms)));
+    }
     box.appendChild(frame);
     requestAnimationFrame(() => fit(box));
     resizer.observe(box);
@@ -170,12 +213,18 @@
   };
   const addCardPreviews = () => {
     document.querySelectorAll('a[class*="GridCardLink"]').forEach((card) => {
-      const url = urlFor(card.getAttribute("href"));
+      const href = card.getAttribute("href");
+      const url = urlFor(href);
+      // Decap reuses card elements between screens, so compare the entry, not just the address
+      // (Home, Menu and Footer all show "/").
+      const key = (href || "").replace(/^.*#/, "");
       const existing = card.querySelector(".ebc-card-preview");
-      if (existing && existing.dataset.url === url) return;
+      if (existing && existing.dataset.key === key) return;
       existing?.remove();
       if (!url) return;
-      card.appendChild(makePreviewBox(url));
+      const box = makePreviewBox(url, viewFor(href));
+      box.dataset.key = key;
+      card.appendChild(box);
     });
   };
   // used by pages-hub.js (the "New pages" area on the Pages screen) and link-widget.js

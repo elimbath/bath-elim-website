@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>How to Edit the Website</title>
+<!-- Step-by-step guide to the website editor (Decap CMS at /admin) for church website editors.
+     Screenshots live in img/ next to this file. Open in a browser and use Print → Save as PDF (A4). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Brand colours, the same as the website (src/css/style.css) */
+    --ink: #3f4359;
+    --ink-soft: #616475;
+    --navy: #142940;
+    --teal: #074151;
+    --red: #e21c21;
+    --gold: #f2d675;
+    --grey: #eaeaea;
+    --paper: #ffffff;
+    --navy-tint: #eef1f6;
+    --gold-tint: #fdf6dc;
+    --red-tint: #fdecec;
+    --display: "Montserrat", "Arial Black", sans-serif;
+    --body: "Lato", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; background: #f4f4f6; color: var(--ink); font: 400 15px/1.6 var(--body); }
+  .sheet { max-width: 900px; margin: 0 auto; background: var(--paper); }
+  .inner { padding: 0 56px; }
+  a { color: var(--navy); text-decoration-color: #b9bccb; text-underline-offset: 2px; }
+
+  /* Title band: the church dome photo, as on the homepage's live stream section */
+  .masthead { color: #fff; padding: 44px 56px 38px; position: relative; overflow: hidden;
+    background: linear-gradient(100deg, rgba(20,41,64,.94) 0%, rgba(20,41,64,.84) 55%, rgba(20,41,64,.62) 100%),
+      url("img/masthead.jpg") center 40% / cover no-repeat, var(--navy); }
+  .masthead::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
+    background: linear-gradient(90deg, var(--red) 0 25%, var(--gold) 25% 50%, var(--teal) 50% 75%, #6f86a8 75%); }
+  .eyebrow { font: 700 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 0 0 12px; }
+  h1 { font: 800 34px/1.15 var(--display); margin: 0 0 12px; letter-spacing: -.01em; }
+  .masthead p.lede { margin: 0; max-width: 620px; font-size: 16px; font-weight: 300; color: #dfe5ee; }
+
+  h2 { font: 800 22px/1.25 var(--display); color: var(--navy); margin: 0 0 6px; display: flex; align-items: center; gap: 12px; }
+  h3 { font: 700 16px/1.3 var(--display); color: var(--navy); margin: 22px 0 6px; }
+  .section { padding: 40px 0 8px; border-top: 1px solid var(--grey); }
+  .section:first-of-type { border-top: 0; }
+  .section > .intro { margin: 0 0 16px; color: var(--ink-soft); max-width: 700px; }
+  .num { flex: none; display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--navy);
+    color: #fff; font: 800 15px/1 var(--display); }
+  p { margin: 0 0 12px; }
+  b, strong { color: var(--navy); }
+
+  /* What you can do (contents) */
+  .toc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 26px 0 0; padding: 0; list-style: none; counter-reset: t; }
+  .toc li { counter-increment: t; }
+  .toc a { display: flex; gap: 10px; align-items: flex-start; height: 100%; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--grey); border-radius: 10px; padding: 12px 14px; background: #fff; }
+  .toc a:hover { border-color: #c9d1de; background: var(--navy-tint); }
+  .toc a::before { content: counter(t); flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--navy-tint); color: var(--navy);
+    display: grid; place-items: center; font: 800 12px/1 var(--display); margin-top: 1px; }
+  .toc b { display: block; font-size: 14px; line-height: 1.3; }
+  .toc span { display: block; font-size: 12.5px; line-height: 1.4; color: var(--ink-soft); margin-top: 2px; }
+
+  /* Steps */
+  ol.steps { list-style: none; counter-reset: s; margin: 0 0 14px; padding: 0; }
+  ol.steps > li { counter-increment: s; position: relative; padding: 0 0 12px 40px; }
+  ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid var(--navy); color: var(--navy); display: grid; place-items: center; font: 800 12px/1 var(--display); }
+
+  /* Screenshots */
+  figure.shot { margin: 8px 0 18px; break-inside: avoid; }
+  figure.shot img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid #d9dce4;
+    box-shadow: 0 8px 24px rgba(20,41,64,.10); background: #fff; }
+  figure.shot.half img { width: 60%; }
+  figure.shot.mid img { width: 75%; }
+  figure.shot figcaption { font-size: 13px; color: var(--ink-soft); margin-top: 8px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  .pair figure.shot img { width: 100%; }
+
+  /* Key to the red numbers on a screenshot */
+  ol.key { list-style: none; margin: -4px 0 18px; padding: 0; display: grid; gap: 6px; break-inside: avoid; }
+  ol.key li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+  ol.key .m { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--red); color: #fff;
+    display: grid; place-items: center; font: 800 12px/1 Arial, sans-serif; margin-top: 1px; }
+
+  /* Little inline "buttons" so the reader can recognise what to click */
+  .btn { display: inline-block; font: 700 12.5px/1 var(--body); padding: 4px 8px; border-radius: 4px; background: #313d3e; color: #fff; white-space: nowrap; }
+  .btn.light { background: #e8f5fe; color: #3a69c7; }
+  .btn.pub { background: #3a8ea3; }
+  .btn.danger { background: #fcefea; color: #d3302f; }
+  .tag { font: 700 11.5px/1 var(--body); letter-spacing: .05em; text-transform: uppercase; padding: 3px 6px; border-radius: 3px; white-space: nowrap; }
+  .tag.ok { color: #005614; background: #e3f4e6; }
+  .tag.no { color: #c0002b; background: #fde8ec; }
+  kbd { font: 600 12px/1 "SFMono-Regular", Menlo, monospace; padding: 2px 6px; border: 1px solid #c9ccd6; border-bottom-width: 2px; border-radius: 4px; background: #fff; }
+  code { font: 600 13px/1 "SFMono-Regular", Menlo, monospace; color: var(--navy); background: var(--navy-tint); padding: 2px 5px; border-radius: 4px; }
+
+  .note { display: flex; gap: 12px; background: var(--gold-tint); border-radius: 10px; padding: 12px 16px; margin: 6px 0 16px; font-size: 14px; break-inside: avoid; }
+  .note .i { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: var(--navy);
+    display: grid; place-items: center; font: 900 13px/1 var(--body); margin-top: 1px; }
+  .note.warn { background: var(--red-tint); }
+  .note.warn .i { background: var(--red); color: #fff; }
+
+  table.t { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 16px; break-inside: avoid; }
+  table.t th, table.t td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--grey); vertical-align: top; }
+  table.t th { font: 700 11px/1.2 var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+  table.t td:first-child { font-weight: 700; color: var(--navy); width: 34%; }
+
+  footer { background: var(--ink); color: #fff; margin-top: 44px; padding: 30px 56px 26px; display: flex; align-items: center;
+    justify-content: space-between; gap: 24px; break-inside: avoid; }
+  footer img { width: 260px; max-width: 55%; height: auto; display: block; }
+  footer .meta { text-align: right; font-size: 12px; line-height: 1.8; color: #d7d9e2; }
+  footer .meta b { color: #fff; font-size: 13px; letter-spacing: .04em; }
+
+  @media (max-width: 700px) {
+    .inner { padding: 0 16px; }
+    .masthead { padding: 32px 16px 30px; }
+    h1 { font-size: 26px; }
+    .toc { grid-template-columns: 1fr 1fr; }
+    .pair { grid-template-columns: 1fr; }
+    figure.shot.half img, figure.shot.mid img { width: 100%; }
+    footer { flex-direction: column; align-items: flex-start; padding: 26px 16px; }
+    footer .meta { text-align: left; }
+  }
+  @media (max-width: 440px) { .toc { grid-template-columns: 1fr; } }
+
+  @page { size: A4; margin: 12mm 0; }
+  @page :first { margin-top: 0; }
+  @media print {
+    body { background: #fff; font-size: 13px; }
+    .sheet { max-width: none; }
+    .inner { padding: 0 15mm; }
+    .masthead { padding: 14mm 15mm 10mm; }
+    .section { padding-top: 22px; }
+    /* Every numbered topic starts on a new page (the contents stay with the title on page 1) */
+    .section:not(#contents) { break-before: page; border-top: 0; padding-top: 0; }
+    figure.shot img { box-shadow: none; }
+    figure.shot { margin-bottom: 12px; }
+    .toc a { padding: 9px 11px; }
+    h2, h3 { break-after: avoid; }
+    footer { padding: 10mm 15mm; margin-top: 24px; margin-bottom: -12mm; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="masthead">
+    <p class="eyebrow">Bath Elim Church · Guide for website editors</p>
+    <h1>How to edit the website</h1>
+    <p class="lede">Everything you need to keep the website up to date: signing in, changing pages, adding photos, creating new pages, and looking after the menu and footer. Follow the red numbers on each picture.</p>
+  </header>
+
+  <div class="inner">
+
+    <!-- Contents -->
+    <section class="section" id="contents">
+      <ol class="toc">
+        <li><a href="#sign-in"><div><b>Signing in</b><span>Getting into the editor</span></div></a></li>
+        <li><a href="#around"><div><b>Finding your way around</b><span>Pages, Site settings, views</span></div></a></li>
+        <li><a href="#edit"><div><b>Changing a page</b><span>Boxes on the left, preview on the right</span></div></a></li>
+        <li><a href="#publish"><div><b>Publishing</b><span>Putting your changes live</span></div></a></li>
+        <li><a href="#text"><div><b>Writing and formatting text</b><span>Bold, headings, lists, links</span></div></a></li>
+        <li><a href="#lists"><div><b>Lists of things</b><span>Notices, people, videos…</span></div></a></li>
+        <li><a href="#images"><div><b>Photos and pictures</b><span>Upload, choose, replace</span></div></a></li>
+        <li><a href="#links"><div><b>Links</b><span>Pick a page from the list</span></div></a></li>
+        <li><a href="#new"><div><b>Creating a new page</b><span>Simple layout</span></div></a></li>
+        <li><a href="#advanced"><div><b>Building a page from sections</b><span>Advanced layout</span></div></a></li>
+        <li><a href="#menu"><div><b>The menu</b><span>Adding pages and drop-downs</span></div></a></li>
+        <li><a href="#footer"><div><b>Footer and contact details</b><span>Address, social links, PDF</span></div></a></li>
+        <li><a href="#delete"><div><b>Deleting a page</b><span>And removing it from the menu</span></div></a></li>
+        <li><a href="#help"><div><b>Tips and problems</b><span>If something isn’t right</span></div></a></li>
+      </ol>
+      <div class="note" style="margin-top:18px"><span class="i">i</span><div><b>You can’t break anything.</b> Every published change is kept as a saved version, so any mistake, even a deleted page, can be put back by the website administrator.</div></div>
+    </section>
+
+    <!-- 1. Sign in -->
+    <section class="section" id="sign-in">
+      <h2><span class="num">1</span>Signing in</h2>
+      <p class="intro">You need a free GitHub account that the website administrator has added to the website’s team. You only do the approval step the first time.</p>
+      <ol class="steps">
+        <li>Go to <a href="https://www.elimbath.org/admin"><b>www.elimbath.org/admin</b></a>. (Until the move from Wix is finished, use <a href="https://bath-elim-website.elimbath.workers.dev/admin">bath-elim-website.elimbath.workers.dev/admin</a>.)</li>
+        <li>Click <span class="btn">Login with GitHub</span> (marked <b>1</b> in the picture below). A small window opens.</li>
+        <li>Sign in with your GitHub username and password, if you aren’t signed in already.</li>
+        <li><b>First time only:</b> GitHub asks whether to let the Bath Elim website make changes for you. Click the green <b>Authorize</b> button.</li>
+        <li>The small window closes and the editor opens. Your browser remembers you, so next time it’s just one click.</li>
+      </ol>
+      <figure class="shot mid"><img src="img/01-login.jpg" alt="The editor's sign-in screen with the Login with GitHub button marked 1"><figcaption>The sign-in screen.</figcaption></figure>
+      <div class="note warn"><span class="i">!</span><div>Seeing <b>“Your GitHub account does not have access to this repo”</b>? Your account hasn’t been added to the team yet. Ask the website administrator to add you, then accept the invitation email from GitHub and try again.</div></div>
+    </section>
+
+    <!-- 2. Around -->
+    <section class="section" id="around">
+      <h2><span class="num">2</span>Finding your way around</h2>
+      <p class="intro">After signing in you land on the <b>Pages</b> screen: a list of every page on the website.</p>
+      <figure class="shot"><img src="img/02-pages.jpg" alt="The Pages screen with four areas marked"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div><b>Contents</b> is where you are now. <b>Media</b> shows every photo and file on the website.</div></li>
+        <li><span class="m">2</span><div><b>Pages</b> lists the website’s pages. <b>Site settings</b> holds the menu and the footer.</div></li>
+        <li><span class="m">3</span><div><span class="btn">+ New page</span> creates a page of your own (see <a href="#new">Creating a new page</a>).</div></li>
+        <li><span class="m">4</span><div>Switch between a plain <b>list</b> and <b>cards</b> with a small picture of each page.</div></li>
+      </ol>
+      <figure class="shot"><img src="img/03-pages-grid.jpg" alt="The Pages screen in card view, showing small pictures of each page"><figcaption>Card view shows a small picture of each page, so they’re easy to recognise.</figcaption></figure>
+      <p>Further down the same screen, under <b>New pages</b>, are the pages that editors have created themselves (see <a href="#new">step 9</a>). To find anything quickly, type in <b>Search all</b> at the top left.</p>
+    </section>
+
+    <!-- 3. Edit -->
+    <section class="section" id="edit">
+      <h2><span class="num">3</span>Changing a page</h2>
+      <p class="intro">Click any page to open it. The page is split in two: the boxes you fill in on the left, and a live preview of the page on the right.</p>
+      <figure class="shot"><img src="img/04-editor.jpg" alt="The page editor with six areas marked"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div>Whether the website shows what’s on your screen: <span class="tag ok">Live on the website</span> or <span class="tag no">Not published yet</span>. The arrow just left of it takes you back to the list of pages.</div></li>
+        <li><span class="m">2</span><div>The <b>Publish</b> button. It says <b>Published</b> and is greyed out when there’s nothing new to publish.</div></li>
+        <li><span class="m">3</span><div><b>View Live</b> opens this page on the real website in a new tab.</div></li>
+        <li><span class="m">4</span><div>The <b>boxes</b> for everything on the page. Click into any box and type. Each box is labelled, and many have a short tip underneath.</div></li>
+        <li><span class="m">5</span><div>The <b>preview</b>. It changes as you type, so you can see exactly how the page will look.</div></li>
+        <li><span class="m">6</span><div>The <b>eye</b> hides or shows the preview. The arrows under it keep the preview scrolled to the part you’re editing.</div></li>
+      </ol>
+      <div class="note"><span class="i">i</span><div>Grey bars with a <kbd>&gt;</kbd> or <kbd>⌄</kbd> on the left are <b>groups of boxes</b>, such as “Welcome box” or “Live stream”. Click the bar to open or close the group.</div></div>
+    </section>
+
+    <!-- 4. Publish -->
+    <section class="section" id="publish">
+      <h2><span class="num">4</span>Publishing your changes</h2>
+      <p class="intro">Nothing you type reaches the website, or is kept anywhere, until you publish it.</p>
+      <figure class="shot"><img src="img/09-publish.jpg" alt="An edited heading, the preview showing the change, the Not published yet status and the Publish now menu item, marked 1 to 4"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div>As soon as you change something, the status turns to <span class="tag no">Not published yet</span>.</div></li>
+        <li><span class="m">2</span><div>Here the Welcome heading was changed…</div></li>
+        <li><span class="m">3</span><div>…and the preview already shows the new heading.</div></li>
+        <li><span class="m">4</span><div>When you’re happy, click <span class="btn pub">Publish</span>, then <b>Publish now</b>.</div></li>
+      </ol>
+      <p>The status changes to <span class="tag ok">Live on the website</span>. The website takes <b>one to two minutes</b> to update; then refresh the page in your browser (or click <b>View Live</b>) to see it.</p>
+      <h3>Leaving without publishing</h3>
+      <p>If you try to leave a page with changes you haven’t published, you’ll be asked first. Click <b>Stay</b> to go back and publish, or <b>Leave</b> to throw the changes away.</p>
+      <figure class="shot half"><img src="img/10-leave-dialog.jpg" alt="The Leave without publishing? message with Stay and Leave buttons"></figure>
+    </section>
+
+    <!-- 5. Text -->
+    <section class="section" id="text">
+      <h2><span class="num">5</span>Writing and formatting text</h2>
+      <p class="intro">Larger text boxes have a toolbar, a bit like a word processor.</p>
+      <div class="pair">
+        <figure class="shot"><img src="img/05-text-toolbar.jpg" alt="A text box with its toolbar marked 1 and the Rich Text switch marked 2"></figure>
+        <div>
+          <ol class="key">
+            <li><span class="m">1</span><div>The toolbar. Select some words, then click:
+              <table class="t" style="margin-top:6px">
+                <tr><td><b>B</b> / <i>I</i></td><td>Bold / italic</td></tr>
+                <tr><td>🔗 Link</td><td>Turn the words into a link (see <a href="#links">Links</a>)</td></tr>
+                <tr><td>H</td><td>Make a heading or sub-heading</td></tr>
+                <tr><td>“ ”</td><td>A quote (on new pages)</td></tr>
+                <tr><td>Lists</td><td>Bullet points or a numbered list</td></tr>
+              </table></div></li>
+            <li><span class="m">2</span><div>Leave this on <b>Rich Text</b>. “Markdown” shows the text with formatting codes, which is only useful for experts.</div></li>
+          </ol>
+        </div>
+      </div>
+      <div class="note"><span class="i">i</span><div>Press <kbd>Enter</kbd> for a new paragraph. Pasting from Word or an email usually works, but check the preview: removing odd formatting is easiest by pasting with <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> (paste as plain text).</div></div>
+    </section>
+
+    <!-- 6. Lists -->
+    <section class="section" id="lists">
+      <h2><span class="num">6</span>Lists of things</h2>
+      <p class="intro">Some parts of the website are lists: the notices and posters on the home page, the leadership team, the timeline, the videos on Watch again, the rooms for hire, and so on. They all work the same way.</p>
+      <div class="pair">
+        <figure class="shot"><img src="img/06-list.jpg" alt="The notices list with the Add button marked 1 and an item's top bar marked 2"></figure>
+        <div>
+          <ol class="key">
+            <li><span class="m">1</span><div><b>Add</b> a new item to the list. It appears at the bottom, with empty boxes to fill in.</div></li>
+            <li><span class="m">2</span><div>Each item has a bar along the top:
+              <br><kbd>&gt;</kbd> opens or closes the item,
+              <br><kbd>=</kbd> is a handle: <b>drag it up or down</b> to change the order,
+              <br><kbd>×</kbd> removes the item.</div></li>
+          </ol>
+          <p>The order in the list is the order on the website.</p>
+        </div>
+      </div>
+      <div class="note"><span class="i">i</span><div>Notices have a <b>Show on the website</b> switch. Turn it off to hide a poster without deleting it, for example to use it again next year.</div></div>
+    </section>
+
+    <!-- 7. Images -->
+    <section class="section" id="images">
+      <h2><span class="num">7</span>Photos and pictures</h2>
+      <p class="intro">Every photo box has the same buttons.</p>
+      <div class="pair">
+        <figure class="shot"><img src="img/07-image-field.jpg" alt="A notice with its Show on the website switch and photo buttons marked 1 to 4"></figure>
+        <div>
+          <ol class="key">
+            <li><span class="m">1</span><div><b>Show on the website</b> (notices only), as above.</div></li>
+            <li><span class="m">2</span><div><span class="btn light">Choose different image</span> opens the picture library, where you can also upload a new one.</div></li>
+            <li><span class="m">3</span><div><span class="btn light">Replace with URL</span> uses a picture from another website. You’ll rarely need this.</div></li>
+            <li><span class="m">4</span><div><span class="btn danger">Remove image</span> takes the photo off this part of the page (it stays in the library).</div></li>
+          </ol>
+          <p>Some photo boxes have a <b>Description</b> box next to them. Describe the picture in a few words (for example “Children singing at the nativity”): it’s read aloud to blind visitors and helps Google.</p>
+        </div>
+      </div>
+      <h3>The picture library</h3>
+      <figure class="shot"><img src="img/08-media-library.jpg" alt="The picture library with Upload, Search, the pictures and Choose selected marked 1 to 4"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div><span class="btn">Upload</span> a photo from your computer or phone. It’s added to the library and selected.</div></li>
+        <li><span class="m">2</span><div><b>Search</b> the library by file name.</div></li>
+        <li><span class="m">3</span><div>Click a picture to select it…</div></li>
+        <li><span class="m">4</span><div>…then click <b>Choose selected</b>. The picture appears in the box and in the preview.</div></li>
+      </ol>
+      <div class="note"><span class="i">i</span><div><b>Photo tips:</b> use JPG photos, ideally under 1&nbsp;MB (most phones let you share a “medium” or “large” size). Huge photos make the website slow. Wide (landscape) photos work best for banners and top photos. Only use photos the church has permission to use. The <b>Media</b> link at the top of the editor shows the same library, where you can also delete pictures nobody uses any more.</div></div>
+      <h3>Photos inside the page text</h3>
+      <p>On pages you’ve created, you can put a photo between paragraphs: click where it should go, then click <b>+</b> in the toolbar and choose <b>Image</b>.</p>
+      <h3>PDF files</h3>
+      <p>Files such as the safeguarding policy work the same way: <span class="btn light">Choose different file</span> opens the library, where you upload the new PDF and choose it.</p>
+      <figure class="shot half"><img src="img/24-file.jpg" alt="The Safeguarding policy (PDF) box with Choose different file marked 1"></figure>
+    </section>
+
+    <!-- 8. Links -->
+    <section class="section" id="links">
+      <h2><span class="num">8</span>Links</h2>
+      <p class="intro">Link boxes (on the menu, buttons and notices) suggest the website’s pages as you type, so you don’t need to know any page addresses.</p>
+      <div class="pair">
+        <figure class="shot"><img src="img/21-link-picker.jpg" alt="A link box with 'you' typed and Youth Club suggested"></figure>
+        <div>
+          <ol class="steps">
+            <li>Click into the link box and start typing the page’s name, for example <i>you</i> for “Youth Club”.</li>
+            <li>Click the page in the list (or use the arrow keys and <kbd>Enter</kbd>).</li>
+            <li>Underneath, <b>Links to: Youth Club</b> confirms it worked.</li>
+          </ol>
+          <p>To link to <b>another website</b> (YouTube, Facebook, a booking form…), paste its full address starting with <code>https://</code>. It will open in a new tab.</p>
+          <p>If you see an orange warning, there’s no page at that address: pick one from the list instead.</p>
+        </div>
+      </div>
+      <p>In the middle of text, select the words and click the 🔗 <b>Link</b> button in the toolbar, then type or paste the address (for a page on this website, just its ending, such as <code>/give</code>).</p>
+    </section>
+
+    <!-- 9. New page -->
+    <section class="section" id="new">
+      <h2><span class="num">9</span>Creating a new page</h2>
+      <p class="intro">Click <span class="btn">+ New page</span> on the Pages screen. The new page opens already filled in with example text and a photo, so you can see how it will look and just replace things.</p>
+      <figure class="shot"><img src="img/11-new-page.jpg" alt="A new page called Youth Club with the title, layout and top photo boxes marked 1 to 3 and the status marked 4"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div><b>Page title.</b> Replace “Test Page” with the real name <b>before you publish</b>: the page’s address is made from it, so “Youth Club” becomes <code>www.elimbath.org/youth-club</code>. The address can’t be changed later.</div></li>
+        <li><span class="m">2</span><div><b>Layout.</b> <b>Simple</b> (one block of text and photos) suits most pages. <b>Advanced</b> builds the page from ready-made sections (see <a href="#advanced">step 10</a>). You can switch at any time without losing anything.</div></li>
+        <li><span class="m">3</span><div><b>Top photo.</b> Shows the title in big letters over a photo. Click <span class="btn danger">Remove image</span> for a plain heading instead.</div></li>
+        <li><span class="m">4</span><div>A new page is <span class="tag no">Not published yet</span> until you publish it.</div></li>
+      </ol>
+      <figure class="shot"><img src="img/12-page-content.jpg" alt="The Introduction and Page content boxes marked 1 and 2, and the + button marked 3"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div><b>Introduction:</b> one or two sentences under the title, saying what the page is about.</div></li>
+        <li><span class="m">2</span><div><b>Page content:</b> the main text. Replace the example headings and text with your own, and delete anything you don’t need.</div></li>
+        <li><span class="m">3</span><div><b>+</b> adds a photo in the middle of the text.</div></li>
+      </ol>
+      <h3>Publishing the new page</h3>
+      <div class="pair">
+        <figure class="shot"><img src="img/15-publish-new.jpg" alt="The Publish menu for a new page with three options"></figure>
+        <div>
+          <p>Click <span class="btn pub">Publish</span> and choose:</p>
+          <p><b>Publish now</b>: the usual choice.<br><b>Publish and create new</b>: publish, then start another new page.<br><b>Publish and duplicate</b>: publish, then start a copy of this page.</p>
+        </div>
+      </div>
+      <figure class="shot"><img src="img/17-new-pages.jpg" alt="The New pages list on the Pages screen showing the Youth Club page"><figcaption>Your page now appears under <b>New pages</b> on the Pages screen, with its address.</figcaption></figure>
+      <div class="note warn"><span class="i">!</span><div>A new page <b>isn’t in the menu</b> until you add it there, so visitors won’t find it. See <a href="#menu">The menu</a>.</div></div>
+    </section>
+
+    <!-- 10. Advanced -->
+    <section class="section" id="advanced">
+      <h2><span class="num">10</span>Building a page from sections</h2>
+      <p class="intro">With the <b>Advanced</b> layout, a page is an <b>opening text</b> followed by any number of ready-made <b>sections</b>, stacked one under another.</p>
+      <div class="pair">
+        <figure class="shot"><img src="img/13-add-section.jpg" alt="The Add section menu listing the section types"></figure>
+        <div>
+          <p>Click <span class="btn" style="background:#798291">Add section</span> and choose a type:</p>
+          <table class="t">
+            <tr><td>Banner</td><td>A big photo with a title</td></tr>
+            <tr><td>Text</td><td>A heading and paragraphs</td></tr>
+            <tr><td>Photo and text</td><td>Side by side, with an optional button</td></tr>
+            <tr><td>Photo gallery</td><td>A row of photos</td></tr>
+            <tr><td>Slideshow</td><td>Photos that change by themselves</td></tr>
+            <tr><td>Quote with photo</td><td>Something someone said</td></tr>
+            <tr><td>Numbered boxes</td><td>“Three ways to get involved”</td></tr>
+            <tr><td>People</td><td>Photos with names and roles</td></tr>
+            <tr><td>Videos</td><td>YouTube thumbnails</td></tr>
+            <tr><td>Button</td><td>A single call to action</td></tr>
+            <tr><td>Poster / notice</td><td>An event poster</td></tr>
+            <tr><td>Map</td><td>A Google map of an address</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="pair">
+        <figure class="shot"><img src="img/14-section.jpg" alt="A Photo and text section added, with Add section marked 1 and the section's top bar marked 2"></figure>
+        <div>
+          <ol class="key">
+            <li><span class="m">1</span><div>Add as many sections as you like.</div></li>
+            <li><span class="m">2</span><div>Each section has the same bar as list items: <kbd>&gt;</kbd> open or close, <kbd>=</kbd> drag to reorder, <kbd>×</kbd> remove.</div></li>
+          </ol>
+          <p>New sections arrive filled in with example text and church photos. Replace what you need; most boxes are optional, and anything left empty is simply left out.</p>
+          <p>Many sections have a <b>Background</b> choice (white, light grey, dark slate or navy) to separate them from the one above.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Menu -->
+    <section class="section" id="menu">
+      <h2><span class="num">11</span>The menu</h2>
+      <p class="intro">The menu at the top of every page is edited in <b>Site settings</b>, together with the footer.</p>
+      <figure class="shot"><img src="img/18-site-settings.jpg" alt="The Site settings screen with Menu marked 1 and Footer and contact details marked 2"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div><b>Menu</b>: the links at the top of the website.</div></li>
+        <li><span class="m">2</span><div><b>Footer &amp; contact details</b>: see <a href="#footer">step 12</a>.</div></li>
+      </ol>
+      <figure class="shot"><img src="img/19-menu.jpg" alt="The menu editor with Add menu items, a drag handle, a remove button and the preview marked 1 to 4"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div><b>Add menu items</b> adds a new item to the top bar.</div></li>
+        <li><span class="m">2</span><div>Drag <kbd>=</kbd> to change the order of the menu.</div></li>
+        <li><span class="m">3</span><div><kbd>×</kbd> removes an item from the menu (the page itself isn’t deleted).</div></li>
+        <li><span class="m">4</span><div>The preview shows the menu as it will look.</div></li>
+      </ol>
+      <h3>Items and drop-downs</h3>
+      <p>Click <kbd>&gt;</kbd> on an item to open it.</p>
+      <figure class="shot"><img src="img/20-menu-item.jpg" alt="The Church Life menu item with Label, Link and Add sub-items marked 1 to 3"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div><b>Label</b>: the words shown in the menu.</div></li>
+        <li><span class="m">2</span><div><b>Link</b>: the page it opens. <b>Leave it empty</b> to make the item a drop-down heading, like “Church Life”.</div></li>
+        <li><span class="m">3</span><div><b>Add sub-items</b> adds a link to the item’s drop-down.</div></li>
+      </ol>
+      <h3>Adding a page to the menu</h3>
+      <ol class="steps">
+        <li>Open the item whose drop-down it belongs in (or click <b>Add menu items</b> for a new top-level item).</li>
+        <li>Click <b>Add sub-items</b>.</li>
+        <li>In the new item’s <b>Link</b> box, start typing the page’s name and pick it from the list (see <a href="#links">Links</a>). If the Label is empty, it fills in with the page’s name.</li>
+        <li>Check the preview, then <b>Publish → Publish now</b>.</li>
+      </ol>
+      <figure class="shot"><img src="img/22-menu-added.jpg" alt="Youth Club added under Church Life: label marked 1, link marked 2, and the new item in the preview marked 3"></figure>
+      <ol class="key">
+        <li><span class="m">1</span><div>The label filled in by itself.</div></li>
+        <li><span class="m">2</span><div>The link, confirmed underneath: <b>Links to: Youth Club</b>.</div></li>
+        <li><span class="m">3</span><div>The new item in the preview of the drop-down.</div></li>
+      </ol>
+    </section>
+
+    <!-- 12. Footer -->
+    <section class="section" id="footer">
+      <h2><span class="num">12</span>Footer and contact details</h2>
+      <p class="intro"><b>Site settings → Footer &amp; contact details</b> holds the information at the bottom of every page. The preview shows the footer as you type.</p>
+      <figure class="shot"><img src="img/23-footer.jpg" alt="The Footer and contact details editor with the footer preview"></figure>
+      <table class="t">
+        <tr><th>Box</th><th>What it’s for</th></tr>
+        <tr><td>Church name, Address line, Charity line</td><td>The text at the bottom of every page</td></tr>
+        <tr><td>Facebook link, YouTube link</td><td>The social media buttons (full addresses starting with https://)</td></tr>
+        <tr><td>Safeguarding policy (PDF)</td><td>The PDF behind the “Safeguarding Policy” button (see <a href="#images">PDF files</a>)</td></tr>
+        <tr><td>Safeguarding commitment link</td><td>Elim’s national safeguarding page</td></tr>
+        <tr><td>Default page description (for Google)</td><td>The short description Google shows under the church’s name in search results</td></tr>
+      </table>
+    </section>
+
+    <!-- 13. Delete -->
+    <section class="section" id="delete">
+      <h2><span class="num">13</span>Deleting a page</h2>
+      <p class="intro">Only pages you’ve created can be deleted; the main pages can only be changed.</p>
+      <ol class="steps">
+        <li>Open the page and click <span class="btn danger">Delete entry</span> at the top.</li>
+        <li>Check the name in the message, then click <b>Delete page</b>. The page disappears from the website within a minute or two.</li>
+        <li>If the page was in the menu, remove it there too (<b>Site settings → Menu</b>, then <kbd>×</kbd> on the item, then Publish), or visitors will reach a “page not found” message.</li>
+      </ol>
+      <div class="pair">
+        <figure class="shot"><img src="img/25-delete-button.jpg" alt="The Delete entry button marked 1"></figure>
+        <figure class="shot"><img src="img/26-delete-dialog.jpg" alt="The Delete this page? message with Cancel and Delete page buttons"></figure>
+      </div>
+    </section>
+
+    <!-- 14. Help -->
+    <section class="section" id="help">
+      <h2><span class="num">14</span>Tips and problems</h2>
+      <table class="t">
+        <tr><th>If…</th><th>Try this</th></tr>
+        <tr><td>I published but the website hasn’t changed</td><td>Wait two minutes, then refresh the page. On a phone, close the page and open it again.</td></tr>
+        <tr><td>I made a mistake and published it</td><td>Change it back and publish again. For anything bigger, such as a deleted page, ask the website administrator: every past version is kept.</td></tr>
+        <tr><td>I left the page and lost my changes</td><td>Changes are only kept once published. If your browser closed by accident, open the page again: the editor may offer to bring back the changes you hadn’t published.</td></tr>
+        <tr><td>The preview looks squashed</td><td>The preview is narrower than a computer screen, so it may show the mobile layout. Click <b>View Live</b> after publishing to check the real page.</td></tr>
+        <tr><td>“Your GitHub account does not have access”</td><td>Ask the website administrator to add you to the team, then accept GitHub’s invitation email.</td></tr>
+        <tr><td>Two people editing at once</td><td>Avoid editing the same page at the same time: the last person to publish wins.</td></tr>
+        <tr><td>Signing out</td><td>Click the round picture at the top right of the editor and choose <b>Log out</b>. Always sign out on a shared computer.</td></tr>
+      </table>
+    </section>
+
+  </div>
+
+  <footer>
+    <img src="img/logo-footer.png" alt="Bath Elim Church — For the journey">
+    <div class="meta"><b>HOW TO EDIT THE WEBSITE</b><br>A guide for church website editors · November 2026</div>
+  </footer>
+</div>
+</body>
+</html>
