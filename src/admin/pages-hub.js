@@ -19,7 +19,7 @@
   css.textContent = `
     /* hide only the sidebar entry — the editor's back arrow links to the same place */
     a[class*="SidebarNavLink"][href="#/collections/${COLL}"] { display: none !important; }
-    .ebc-hub { margin: 28px 0 40px 12px; }
+    .ebc-hub { margin: 28px 0 40px; }
     .ebc-hub-head { display: flex; align-items: center; justify-content: space-between; gap: 16px;
       background: #fff; border-radius: 5px; box-shadow: 0 2px 6px 0 rgba(68,74,87,.05), 0 1px 3px 0 rgba(68,74,87,.1);
       padding: 18px 20px; margin-bottom: 16px; }
@@ -173,8 +173,36 @@
     }
   }
 
+  // Decap gives the title box, the view/sort bar and the list-view rows a fixed width (682px), but the
+  // thumbnail grid fills the screen, so the screen got narrower when switching from grid to list.
+  // Work out where the grid's last column ends (from the space available, so it's the same in both
+  // views) and make all of them that wide (Pages, Site settings).
+  const GRID_PITCH = 347; // a grid card (335px) plus the 12px gap, as Decap draws them
+  let wideRight = NaN;
+  function alignTop() {
+    const onList = /^#\/collections\/[^/]+\/?$/.test(location.hash.replace(/\?.*$/, ""));
+    const main = onList && document.querySelector('[class*="CollectionMain"]');
+    wideRight = NaN;
+    if (main) {
+      // The grid starts 12px left of the content area (Decap's gap), so it has 12px more room.
+      const st = getComputedStyle(main), r = main.getBoundingClientRect();
+      const left = r.left + parseFloat(st.paddingLeft) - 12;
+      const room = r.right - parseFloat(st.paddingRight) - left;
+      const li = document.querySelector('li[class*="GridCard"]');
+      const pitch = li && li.offsetWidth ? li.offsetWidth + parseFloat(getComputedStyle(li).marginLeft) : GRID_PITCH;
+      // always a full row, so every screen (Pages, Site settings, Docs) is the same width
+      if (room > 0) wideRight = left + Math.max(1, Math.floor((room + 0.5) / pitch)) * pitch;
+    }
+    const els = [...document.querySelectorAll('[class*="CollectionTopContainer"], [class*="CollectionControlsContainer"], li[class*="ListCard"], .ebc-docs-panel')];
+    for (const el of els) {
+      const w = isFinite(wideRight) ? Math.max(0, wideRight - el.getBoundingClientRect().left) + "px" : "";
+      if (el.style.width !== w) { el.style.width = w; el.style.maxWidth = w ? "none" : ""; }
+    }
+  }
+
   function ensureHub() {
     adaptEditor();
+    alignTop();
     const route = location.hash.replace(/\?.*$/, "");
     // The new-pages list has no sidebar entry: send its list screen to Pages.
     if (route === `#/collections/${COLL}`) {
@@ -215,10 +243,9 @@
     } else if (hub.querySelector(".ebc-body").dataset.view !== (grid ? "grid" : "list") && cache) {
       cache.then((list) => renderList(hub, list, grid));
     }
-    // Line the header up with the right edge of the fixed-page cards above. Measured every time,
-    // because the cards are still being laid out when the area is first added (and list/grid differ).
-    const cards = [...container.querySelectorAll('a[href^="#/collections/pages/entries/"]')];
-    const right = Math.max(...cards.map((c) => c.getBoundingClientRect().right));
+    // Line the header up with the right edge of the cards above (worked out in alignTop). Measured
+    // every time, because the cards are still being laid out when the area is first added.
+    const right = wideRight;
     if (isFinite(right) && right > 0) {
       const w = Math.max(0, right - hub.getBoundingClientRect().left) + "px";
       if (hub.style.maxWidth !== w) hub.style.maxWidth = w;
@@ -226,6 +253,7 @@
   }
 
   window.addEventListener("hashchange", () => { if (location.hash.startsWith("#/collections/pages")) refresh(); });
+  window.addEventListener("resize", () => requestAnimationFrame(ensureHub));
   let queued = false;
   new MutationObserver(() => {
     if (queued) return;
